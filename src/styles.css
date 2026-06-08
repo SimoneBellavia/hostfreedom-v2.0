@@ -137,8 +137,34 @@
     border-color: var(--color-border);
   }
 
-  body {
+  html, body {
+    font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
     background-color: var(--color-background);
     color: var(--color-foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .font-serif-display {
+    font-family: 'Playfair Display', 'Instrument Serif', ui-serif, Georgia, serif;
+    font-feature-settings: "liga", "dlig";
   }
 }
+
+@utility shimmer-border {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(16,185,129,0.6), rgba(56,189,248,0.4), rgba(16,185,129,0.6));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
