@@ -851,7 +851,7 @@ function Step3(props: {
   );
 }
 
-function Panel({ title, icon: Icon, children }: { title: string; icon: React.ComponentType<{ className?: string }>; children: React.ReactNode }) {
+function Panel({ title, icon: Icon, children }: { title: string; icon: React.ComponentType<React.SVGProps<SVGSVGElement>>; children: React.ReactNode }) {
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5">
       <div className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
@@ -1052,7 +1052,7 @@ function HeroBlock({ palette, archetype, isMobile }: { palette: Palette; archety
   );
 }
 
-function SearchInput({ icon: Icon, label, value, palette }: { icon: React.ComponentType<{ className?: string }>; label: string; value: string; palette: Palette }) {
+function SearchInput({ icon: Icon, label, value, palette }: { icon: React.ComponentType<React.SVGProps<SVGSVGElement>>; label: string; value: string; palette: Palette }) {
   return (
     <div
       className="flex items-center gap-3 rounded-xl border px-3 py-2.5"
@@ -1286,7 +1286,7 @@ function Step4(props: {
 function IconInput({
   icon: Icon, type = "text", value, onChange, placeholder,
 }: {
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   type?: string;
   value: string;
   onChange: (v: string) => void;
