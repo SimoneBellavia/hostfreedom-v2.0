@@ -994,6 +994,56 @@ function PaletteCard({ palette, active, onClick }: { palette: Palette; active: b
    DEVICE PREVIEW FRAME
 ============================================================================ */
 
+function OptimizationMeter({ perfect }: { perfect: boolean }) {
+  return (
+    <div
+      className={`mb-3 overflow-hidden rounded-xl border px-3.5 py-2.5 transition-all duration-500 ${
+        perfect
+          ? "border-amber-300/70 bg-gradient-to-r from-amber-50 via-white to-amber-50 shadow-[0_0_24px_-6px_rgba(245,158,11,0.55)]"
+          : "border-slate-200 bg-white"
+      }`}
+    >
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-2">
+          <span
+            className={`grid h-7 w-7 shrink-0 place-items-center rounded-full transition ${
+              perfect ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-500"
+            }`}
+          >
+            {perfect ? <Sparkles className="h-3.5 w-3.5 animate-pulse" /> : <Sparkles className="h-3.5 w-3.5" />}
+          </span>
+          <div className="min-w-0 leading-tight">
+            <div className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+              Performance &amp; Conversion Score
+            </div>
+            <div
+              className={`truncate text-[12px] font-semibold transition ${
+                perfect ? "text-amber-900" : "text-slate-700"
+              }`}
+            >
+              {perfect
+                ? "🔥 Configurazione Perfetta · Ottimizzato al 100% per Conversioni Mobile"
+                : "Ottimizzazione: Standard"}
+            </div>
+          </div>
+        </div>
+        <div className="hidden shrink-0 items-center gap-1 rounded-full bg-white/70 px-2 py-1 text-[10px] font-semibold ring-1 ring-inset ring-slate-200 sm:flex">
+          <span className={`h-1.5 w-1.5 rounded-full ${perfect ? "bg-amber-500 animate-pulse" : "bg-slate-400"}`} />
+          <span className={perfect ? "text-amber-800" : "text-slate-600"}>{perfect ? "100%" : "60%"}</span>
+        </div>
+      </div>
+      <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-slate-100">
+        <div
+          className={`h-full rounded-full transition-all duration-700 ease-out ${
+            perfect ? "bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400" : "bg-slate-400"
+          }`}
+          style={{ width: perfect ? "100%" : "60%" }}
+        />
+      </div>
+    </div>
+  );
+}
+
 function DevicePreview({ device, children }: { device: "mobile" | "desktop"; children: React.ReactNode }) {
   if (device === "mobile") {
     return (
