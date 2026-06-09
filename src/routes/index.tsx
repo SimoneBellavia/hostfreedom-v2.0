@@ -763,43 +763,79 @@ function Step3(props: {
             {/* Archetypes */}
             <Panel title="03 · Stile estetico" icon={Star}>
               <div className="grid grid-cols-2 gap-2">
-                {ARCHETYPES.map((a) => (
-                  <button
-                    key={a.id}
-                    onClick={() => setArchetype(a.id)}
-                    className={`rounded-xl border p-3 text-left transition ${
-                      archetype === a.id
-                        ? "border-slate-900 bg-slate-900 text-white"
-                        : "border-slate-200 bg-white hover:border-slate-300"
-                    }`}
-                  >
-                    <div className="text-sm font-semibold">{a.name}</div>
-                    <div className={`mt-0.5 text-[11px] ${archetype === a.id ? "text-slate-300" : "text-slate-500"}`}>
-                      {a.desc}
-                    </div>
-                  </button>
-                ))}
+                {ARCHETYPES.map((a) => {
+                  const isRecommended = a.id === "urban";
+                  const isActive = archetype === a.id;
+                  return (
+                    <button
+                      key={a.id}
+                      onClick={() => setArchetype(a.id)}
+                      className={`relative rounded-xl border p-3 text-left transition ${
+                        isActive
+                          ? "border-slate-900 bg-slate-900 text-white"
+                          : isRecommended
+                            ? "border-amber-300 bg-gradient-to-br from-amber-50 to-white hover:border-amber-400"
+                            : "border-slate-200 bg-white hover:border-slate-300"
+                      }`}
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <div className="text-sm font-semibold">{a.name}</div>
+                      </div>
+                      {isRecommended && (
+                        <div className={`mt-1 inline-flex items-center rounded-full px-2 py-0.5 text-[9px] font-semibold tracking-wide ${
+                          isActive ? "bg-amber-300/90 text-slate-900" : "bg-amber-100 text-amber-900 ring-1 ring-amber-300/60"
+                        }`}>
+                          ✨ Consigliato · Massima Conversione
+                        </div>
+                      )}
+                      <div className={`mt-1 text-[11px] ${isActive ? "text-slate-300" : "text-slate-500"}`}>
+                        {a.desc}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50/60 p-3 text-[11px] leading-relaxed text-slate-700">
+                💡 <span className="font-semibold text-slate-900">Il consiglio del designer:</span> Lo stile <em>"Minimal Modern"</em> è ideale per l'hospitality di alto livello. Riduce le distrazioni visive e mette al centro le immagini della tua struttura, aumentando la fiducia dell'ospite.
               </div>
             </Panel>
 
             {/* Layouts */}
             <Panel title="04 · Struttura della pagina" icon={LayoutGrid}>
               <div className="space-y-2">
-                {LAYOUTS.map((l) => (
-                  <button
-                    key={l.id}
-                    onClick={() => setLayout(l.id)}
-                    className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3 text-left transition ${
-                      layout === l.id ? "border-slate-900 bg-slate-50" : "border-slate-200 bg-white hover:border-slate-300"
-                    }`}
-                  >
-                    <div>
-                      <div className="text-sm font-semibold text-slate-900">{l.name}</div>
-                      <div className="text-[11px] text-slate-500">{l.desc}</div>
-                    </div>
-                    {layout === l.id && <Check className="h-4 w-4 text-slate-900" />}
-                  </button>
-                ))}
+                {LAYOUTS.map((l, idx) => {
+                  const isRecommended = l.id === "classic";
+                  const isActive = layout === l.id;
+                  return (
+                    <button
+                      key={l.id}
+                      onClick={() => setLayout(l.id)}
+                      className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3 text-left transition ${
+                        isActive
+                          ? "border-slate-900 bg-slate-50"
+                          : isRecommended
+                            ? "border-amber-300 bg-gradient-to-r from-amber-50 to-white hover:border-amber-400"
+                            : "border-slate-200 bg-white hover:border-slate-300"
+                      }`}
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <div className="text-sm font-semibold text-slate-900">Layout {idx + 1} · {l.name}</div>
+                          {isRecommended && (
+                            <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-semibold tracking-wide text-amber-900 ring-1 ring-amber-300/60">
+                              ✨ Più Performante
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-[11px] text-slate-500">{l.desc}</div>
+                      </div>
+                      {isActive && <Check className="h-4 w-4 shrink-0 text-slate-900" />}
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50/60 p-3 text-[11px] leading-relaxed text-slate-700">
+                💡 <span className="font-semibold text-slate-900">Il consiglio del designer:</span> Questo layout posiziona il widget di ricerca date e disponibilità in primo piano. Riduce i passaggi necessari per prenotare e ottimizza l'esperienza touch da smartphone, dove avviene l'80% delle prenotazioni.
               </div>
             </Panel>
           </div>
