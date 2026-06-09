@@ -365,7 +365,7 @@ function Step1({
       </p>
 
       <div className="mt-10 space-y-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)] md:p-8">
-        <Field label="Fatturato Lordo Annuo via portali" hint="Quanto incassi in un anno tramite Booking, Airbnb, Vrbo, ecc.">
+        <Field label="Fatturato Lordo Annuo via portali" hint="Quanto incassi in un anno tramite Booking, Airbnb, Vrbo, ecc." tooltip="Questo dato viene elaborato esclusivamente nel tuo browser tramite crittografia locale per stimare i tuoi margini. HostFreedom non memorizza né traccia le tue informazioni finanziarie in questa fase.">
           <div className="relative">
             <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-lg font-medium text-slate-400">€</span>
             <input
