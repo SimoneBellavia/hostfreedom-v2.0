@@ -458,6 +458,8 @@ function Step2({
   setRegime: (r: "forfettario" | "ordinario") => void;
   onNext: () => void;
 }) {
+  const [directBookingPercentage, setDirectBookingPercentage] = useState(30);
+
   const taxRate = useMemo(() => {
     if (properties === 1) return { rate: 0.21, label: "Cedolare Secca 21%", basis: "fatturato" as const };
     if (properties <= 4) return { rate: 0.26, label: "Cedolare Secca 26%", basis: "fatturato" as const };
@@ -487,7 +489,9 @@ function Step2({
   const directTax = computeTax(revenue);
   const directNet = revenue - directTax;
 
+  const totalOtaCommissions = bookingCommission + airbnbCommission;
   const savings = Math.max(0, directNet - bookingNet);
+  const realisticSavings = totalOtaCommissions * (directBookingPercentage / 100);
 
   const fmt = (n: number) =>
     new Intl.NumberFormat("it-IT", { maximumFractionDigits: 0 }).format(Math.round(n));
@@ -500,19 +504,52 @@ function Step2({
 
       {/* Macro header */}
       <h2 className="font-serif-display text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 md:text-6xl">
-        Stai lasciando sul tavolo<br />
+        Risparmio realistico:<br />
         <span className="relative inline-block">
           <span className="bg-gradient-to-br from-emerald-600 via-emerald-500 to-emerald-700 bg-clip-text text-transparent">
-            €{fmt(savings)}
+            €{fmt(realisticSavings)}
           </span>
         </span>{" "}
-        all'anno di commissioni.
+        all'anno.
         <br />
         <span className="italic text-slate-600">Riprenditela ora.</span>
       </h2>
       <p className="mt-3 max-w-2xl text-base text-slate-600">
         Stima basata sul tuo fatturato lordo dichiarato e sul regime fiscale stimato: <strong className="text-slate-900">{taxRate.label}</strong>.
       </p>
+
+      {/* Savings Slider */}
+      <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 md:p-6">
+        <label className="block">
+          <span className="text-sm font-semibold text-slate-900">
+            Percentuale stimata di prenotazioni dirette che sposterai sul tuo sito: <span className="text-emerald-600">{directBookingPercentage}%</span>
+          </span>
+          <div className="mt-4 flex items-center gap-4">
+            <span className="text-xs font-medium text-slate-400">10%</span>
+            <input
+              type="range"
+              min={10}
+              max={100}
+              step={5}
+              value={directBookingPercentage}
+              onChange={(e) => setDirectBookingPercentage(Number(e.target.value))}
+              className="slider-hostfreedom h-2 flex-1 cursor-pointer appearance-none rounded-full bg-slate-200 outline-none transition [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-emerald-500 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:bg-emerald-500"
+            />
+            <span className="text-xs font-medium text-slate-400">100%</span>
+          </div>
+        </label>
+        <div className="mt-4 rounded-xl border border-emerald-200/70 bg-emerald-50/50 px-4 py-3 text-[13px] leading-relaxed text-slate-700">
+          {directBookingPercentage < 30 ? (
+            <p>
+              Anche spostando solo il <strong className="text-emerald-700">{directBookingPercentage}%</strong> delle tue prenotazioni (es. solo i clienti storici che ritornano), la piattaforma HostFreedom si repaga completamente da sola, lasciandoti un guadagno extra netto di <strong className="text-emerald-700">€{fmt(realisticSavings)}</strong> all'anno.
+            </p>
+          ) : (
+            <p>
+              Ottimo obiettivo. Sfruttando l'effetto cartellone di Google e il nostro posizionamento Mobile-First, questa soglia ti garantisce un ritorno economico pulito di <strong className="text-emerald-700">€{fmt(realisticSavings)}</strong> all'anno direttamente sul tuo conto.
+            </p>
+          )}
+        </div>
+      </div>
 
       {properties >= 5 && (
         <div className="mt-6 inline-flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-2 pl-4">
