@@ -1346,7 +1346,7 @@ function Step4(props: {
         <Field label="Email di contatto" hint="Useremo questa email per inviarti il file di progetto e il codice OTP.">
           <IconInput icon={Mail} type="email" value={email} onChange={setEmail} placeholder="mario@villaserena.it" />
         </Field>
-        <Field label="Numero di telefono">
+        <Field label="Numero di telefono" tooltip="Il tuo numero serve esclusivamente per l'invio della configurazione finale e per un contatto diretto via WhatsApp con il tuo consulente dedicato. Zero spam garantito.">
           <IconInput icon={Phone} type="tel" value={phone} onChange={setPhone} placeholder="+39 333 1234567" />
         </Field>
         <Field label="Nome della struttura principale">
