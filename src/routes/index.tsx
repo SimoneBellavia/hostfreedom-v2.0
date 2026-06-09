@@ -703,7 +703,7 @@ function Step3(props: {
                   Bozza pronta
                 </div>
                 <p className="max-w-xs text-sm text-slate-600">
-                  Hai esaurito le 3 modifiche live. Procedi per ricevere il tuo file di progetto.
+                  Hai esplorato 3 strutture di layout diverse. La tua bozza è pronta: procedi per ricevere il file di progetto.
                 </p>
                 <button
                   onClick={onNext}
