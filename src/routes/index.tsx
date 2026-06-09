@@ -246,11 +246,19 @@ function Configurator() {
    HEADER / FOOTER
 ============================================================================ */
 
+const STEP_META = [
+  { label: "Dati", subtitle: "Input Rapido", peace: "Frizione Zero" },
+  { label: "Verdetto", subtitle: "Verdetto Fiscale", peace: "100% Anonimo e Locale · No Server Storage" },
+  { label: "Design", subtitle: "Laboratorio Creativo", peace: "Esplorazione Libera e Illimitata" },
+  { label: "Contatti", subtitle: "Salvataggio Bozza", peace: "I tuoi dati sono protetti" },
+  { label: "Verifica", subtitle: "Convalida Sicura", peace: "Standard Bancario OTP" },
+] as const;
+
 function Header({ step }: { step: number }) {
-  const steps = ["Dati", "Verdetto", "Design", "Contatti", "Verifica"];
+  const current = STEP_META[step - 1];
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-[#FBFAF7]/85 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-[1400px] items-center justify-between px-4 py-4 md:px-8">
+      <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-4 py-4 md:px-8">
         <div className="flex items-center gap-2.5">
           <div className="grid h-9 w-9 place-items-center rounded-lg bg-slate-900 text-white">
             <KeyRound className="h-4 w-4" />
@@ -261,33 +269,57 @@ function Header({ step }: { step: number }) {
           </div>
         </div>
         <div className="hidden items-center gap-1 md:flex">
-          {steps.map((s, i) => {
+          {STEP_META.map((s, i) => {
             const n = i + 1;
             const active = step === n;
             const done = step > n;
             return (
-              <div key={s} className="flex items-center gap-2">
+              <div key={s.label} className="flex items-center gap-2">
                 <div
-                  className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition ${
+                  className={`group relative flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition ${
                     active
-                      ? "bg-slate-900 text-white"
+                      ? "bg-slate-900 text-white shadow-sm shadow-slate-900/10"
                       : done
-                      ? "bg-emerald-50 text-emerald-700"
-                      : "text-slate-400"
+                        ? "bg-emerald-50 text-emerald-700"
+                        : "text-slate-400"
                   }`}
                 >
-                  <span className="grid h-5 w-5 place-items-center rounded-full bg-white/15 text-[10px]">
+                  <span className={`grid h-5 w-5 place-items-center rounded-full text-[10px] ${active ? "bg-white/15" : done ? "bg-emerald-100" : "bg-slate-100"}`}>
                     {done ? <Check className="h-3 w-3" /> : n}
                   </span>
-                  {s}
+                  {s.label}
+                  <div className="pointer-events-none absolute left-1/2 top-full z-50 mt-2 hidden -translate-x-1/2 group-hover:block">
+                    <div className="w-56 rounded-xl border border-slate-200 bg-white px-3 py-2 text-left shadow-xl">
+                      <div className="text-[11px] font-semibold text-slate-900">{s.subtitle}</div>
+                      <div className="mt-0.5 flex items-center gap-1 text-[10px] text-slate-500">
+                        <ShieldCheck className="h-3 w-3 text-emerald-600" /> {s.peace}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                {i < steps.length - 1 && <div className="h-px w-4 bg-slate-200" />}
+                {i < STEP_META.length - 1 && (
+                  <div className={`h-px w-4 transition ${done ? "bg-emerald-300" : "bg-slate-200"}`} />
+                )}
               </div>
             );
           })}
         </div>
-        <div className="text-xs text-slate-500 md:hidden">
-          Step <span className="font-semibold text-slate-900">{step}</span>/5
+        <div className="hidden min-w-0 flex-col items-end text-right md:flex">
+          <div className="font-serif-display text-sm font-semibold italic text-slate-900">{current.subtitle}</div>
+          <div className="flex items-center gap-1 text-[10px] uppercase tracking-[0.14em] text-emerald-700">
+            <ShieldCheck className="h-3 w-3" /> {current.peace}
+          </div>
+        </div>
+        <div className="flex flex-col items-end text-right md:hidden">
+          <div className="text-[11px] font-semibold text-slate-900">
+            Passo {step}/5 · <span className="font-serif-display italic">{current.subtitle}</span>
+          </div>
+          <div className="mt-0.5 flex items-center gap-1 text-[9px] uppercase tracking-[0.14em] text-emerald-700">
+            <ShieldCheck className="h-2.5 w-2.5" /> {current.peace}
+          </div>
+          <div className="mt-1.5 h-1 w-24 overflow-hidden rounded-full bg-slate-200">
+            <div className="h-full rounded-full bg-slate-900 transition-all duration-500" style={{ width: `${(step / 5) * 100}%` }} />
+          </div>
         </div>
       </div>
     </header>
@@ -333,7 +365,7 @@ function Step1({
       </p>
 
       <div className="mt-10 space-y-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)] md:p-8">
-        <Field label="Fatturato Lordo Annuo via portali" hint="Quanto incassi in un anno tramite Booking, Airbnb, Vrbo, ecc.">
+        <Field label="Fatturato Lordo Annuo via portali" hint="Quanto incassi in un anno tramite Booking, Airbnb, Vrbo, ecc." tooltip="Questo dato viene elaborato esclusivamente nel tuo browser tramite crittografia locale per stimare i tuoi margini. HostFreedom non memorizza né traccia le tue informazioni finanziarie in questa fase.">
           <div className="relative">
             <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-lg font-medium text-slate-400">€</span>
             <input
@@ -377,15 +409,40 @@ function Step1({
   );
 }
 
-function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+function Field({ label, hint, tooltip, children }: { label: string; hint?: string; tooltip?: string; children: React.ReactNode }) {
   return (
     <label className="block">
       <div className="mb-2 flex items-baseline justify-between">
-        <span className="text-sm font-semibold text-slate-900">{label}</span>
+        <span className="flex items-center gap-1.5 text-sm font-semibold text-slate-900">
+          {label}
+          {tooltip && <InfoTip text={tooltip} />}
+        </span>
       </div>
       {children}
       {hint && <p className="mt-1.5 text-xs text-slate-500">{hint}</p>}
     </label>
+  );
+}
+
+function InfoTip({ text }: { text: string }) {
+  return (
+    <span className="group relative inline-flex items-center">
+      <span
+        tabIndex={0}
+        className="grid h-4 w-4 cursor-help place-items-center rounded-full bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200 transition hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-300"
+        aria-label="Informazioni sulla privacy"
+      >
+        <ShieldCheck className="h-2.5 w-2.5" />
+      </span>
+      <span className="pointer-events-none absolute left-1/2 top-full z-50 mt-2 hidden w-64 -translate-x-1/2 group-hover:block group-focus-within:block">
+        <span className="block rounded-xl border border-slate-200 bg-white p-3 text-left text-[11px] font-normal leading-relaxed text-slate-700 shadow-xl">
+          <span className="mb-1 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-700">
+            <ShieldCheck className="h-3 w-3" /> Privacy garantita
+          </span>
+          {text}
+        </span>
+      </span>
+    </span>
   );
 }
 
@@ -866,6 +923,12 @@ function Step3(props: {
               </div>
             </div>
 
+            <OptimizationMeter
+              perfect={colorCount === 3 && selectedPalette.id === "costiera" && archetype === "urban" && layout === "classic"}
+            />
+
+
+
             <DevicePreview device={previewDevice}>
               <SitePreview palette={selectedPalette} layout={layout} archetype={archetype} device={previewDevice} />
             </DevicePreview>
@@ -930,6 +993,56 @@ function PaletteCard({ palette, active, onClick }: { palette: Palette; active: b
 /* ============================================================================
    DEVICE PREVIEW FRAME
 ============================================================================ */
+
+function OptimizationMeter({ perfect }: { perfect: boolean }) {
+  return (
+    <div
+      className={`mb-3 overflow-hidden rounded-xl border px-3.5 py-2.5 transition-all duration-500 ${
+        perfect
+          ? "border-amber-300/70 bg-gradient-to-r from-amber-50 via-white to-amber-50 shadow-[0_0_24px_-6px_rgba(245,158,11,0.55)]"
+          : "border-slate-200 bg-white"
+      }`}
+    >
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-2">
+          <span
+            className={`grid h-7 w-7 shrink-0 place-items-center rounded-full transition ${
+              perfect ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-500"
+            }`}
+          >
+            {perfect ? <Sparkles className="h-3.5 w-3.5 animate-pulse" /> : <Sparkles className="h-3.5 w-3.5" />}
+          </span>
+          <div className="min-w-0 leading-tight">
+            <div className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+              Performance &amp; Conversion Score
+            </div>
+            <div
+              className={`truncate text-[12px] font-semibold transition ${
+                perfect ? "text-amber-900" : "text-slate-700"
+              }`}
+            >
+              {perfect
+                ? "🔥 Configurazione Perfetta · Ottimizzato al 100% per Conversioni Mobile"
+                : "Ottimizzazione: Standard"}
+            </div>
+          </div>
+        </div>
+        <div className="hidden shrink-0 items-center gap-1 rounded-full bg-white/70 px-2 py-1 text-[10px] font-semibold ring-1 ring-inset ring-slate-200 sm:flex">
+          <span className={`h-1.5 w-1.5 rounded-full ${perfect ? "bg-amber-500 animate-pulse" : "bg-slate-400"}`} />
+          <span className={perfect ? "text-amber-800" : "text-slate-600"}>{perfect ? "100%" : "60%"}</span>
+        </div>
+      </div>
+      <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-slate-100">
+        <div
+          className={`h-full rounded-full transition-all duration-700 ease-out ${
+            perfect ? "bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400" : "bg-slate-400"
+          }`}
+          style={{ width: perfect ? "100%" : "60%" }}
+        />
+      </div>
+    </div>
+  );
+}
 
 function DevicePreview({ device, children }: { device: "mobile" | "desktop"; children: React.ReactNode }) {
   if (device === "mobile") {
@@ -1289,7 +1402,7 @@ function Step4(props: {
         <Field label="Email di contatto" hint="Useremo questa email per inviarti il file di progetto e il codice OTP.">
           <IconInput icon={Mail} type="email" value={email} onChange={setEmail} placeholder="mario@villaserena.it" />
         </Field>
-        <Field label="Numero di telefono">
+        <Field label="Numero di telefono" tooltip="Il tuo numero serve esclusivamente per l'invio della configurazione finale e per un contatto diretto via WhatsApp con il tuo consulente dedicato. Zero spam garantito.">
           <IconInput icon={Phone} type="tel" value={phone} onChange={setPhone} placeholder="+39 333 1234567" />
         </Field>
         <Field label="Nome della struttura principale">
