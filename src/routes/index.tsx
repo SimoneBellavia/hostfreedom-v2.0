@@ -58,7 +58,7 @@ const ARCHETYPES = [
   { id: "coastal", name: "Coastal Boutique", desc: "Aria marina, leggerezza" },
   { id: "tuscan", name: "Tuscan Estate", desc: "Calore terroso, autentico" },
   { id: "alpine", name: "Alpine Refuge", desc: "Caldo, legno, intimo" },
-  { id: "urban", name: "Urban Loft", desc: "Minimal, contemporaneo" },
+  { id: "urban", name: "Minimal Modern", desc: "Pulito, contemporaneo, focus immagini" },
   { id: "lake", name: "Lake Villa", desc: "Sereno, signorile" },
   { id: "trullo", name: "Trullo & Masseria", desc: "Pietra, identità" },
   { id: "luxury", name: "Pure Luxury", desc: "Editoriale, hi-end" },
