@@ -923,6 +923,12 @@ function Step3(props: {
               </div>
             </div>
 
+            <OptimizationMeter
+              perfect={colorCount === 3 && selectedPalette.id === "costiera" && archetype === "urban" && layout === "classic"}
+            />
+
+
+
             <DevicePreview device={previewDevice}>
               <SitePreview palette={selectedPalette} layout={layout} archetype={archetype} device={previewDevice} />
             </DevicePreview>
