@@ -155,14 +155,14 @@ function Configurator() {
         {step === 3 && (
           <Step3
             colorCount={colorCount}
-            setColorCount={(c) => onSimulatorChange(() => setColorCount(c))}
+            setColorCount={setColorCount}
             palettes={palettes}
             selectedPalette={selectedPalette}
-            setSelectedPalette={(p) => onSimulatorChange(() => setSelectedPalette(p))}
+            setSelectedPalette={setSelectedPalette}
             archetype={archetype}
-            setArchetype={(a) => onSimulatorChange(() => setArchetype(a))}
+            setArchetype={setArchetype}
             layout={layout}
-            setLayout={(l) => onSimulatorChange(() => setLayout(l))}
+            setLayout={onLayoutChange}
             previewDevice={previewDevice}
             setPreviewDevice={setPreviewDevice}
             interactionCount={interactionCount}
