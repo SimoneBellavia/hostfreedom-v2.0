@@ -719,7 +719,7 @@ function Step3(props: {
                 Disegna il tuo sito.
               </h2>
               <p className="mt-1 text-sm text-slate-600">
-                Ogni scelta aggiorna l'anteprima in tempo reale. <span className="font-semibold text-slate-900">{3 - interactionCount}</span> modifiche rimaste.
+                Colori, palette e stile sono illimitati. Puoi provare <span className="font-semibold text-slate-900">{Math.max(0, 3 - interactionCount)}</span> {3 - interactionCount === 1 ? "altra struttura di layout" : "altre strutture di layout"}.
               </p>
             </div>
 
