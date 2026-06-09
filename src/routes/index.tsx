@@ -409,15 +409,40 @@ function Step1({
   );
 }
 
-function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+function Field({ label, hint, tooltip, children }: { label: string; hint?: string; tooltip?: string; children: React.ReactNode }) {
   return (
     <label className="block">
       <div className="mb-2 flex items-baseline justify-between">
-        <span className="text-sm font-semibold text-slate-900">{label}</span>
+        <span className="flex items-center gap-1.5 text-sm font-semibold text-slate-900">
+          {label}
+          {tooltip && <InfoTip text={tooltip} />}
+        </span>
       </div>
       {children}
       {hint && <p className="mt-1.5 text-xs text-slate-500">{hint}</p>}
     </label>
+  );
+}
+
+function InfoTip({ text }: { text: string }) {
+  return (
+    <span className="group relative inline-flex items-center">
+      <span
+        tabIndex={0}
+        className="grid h-4 w-4 cursor-help place-items-center rounded-full bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200 transition hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-300"
+        aria-label="Informazioni sulla privacy"
+      >
+        <ShieldCheck className="h-2.5 w-2.5" />
+      </span>
+      <span className="pointer-events-none absolute left-1/2 top-full z-50 mt-2 hidden w-64 -translate-x-1/2 group-hover:block group-focus-within:block">
+        <span className="block rounded-xl border border-slate-200 bg-white p-3 text-left text-[11px] font-normal leading-relaxed text-slate-700 shadow-xl">
+          <span className="mb-1 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-700">
+            <ShieldCheck className="h-3 w-3" /> Privacy garantita
+          </span>
+          {text}
+        </span>
+      </span>
+    </span>
   );
 }
 
