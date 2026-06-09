@@ -124,10 +124,10 @@ function Configurator() {
     setSelectedPalette(palettes.find((p) => p.best) ?? palettes[0]);
   }, [colorCount]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onSimulatorChange = (fn: () => void) => {
-    if (interactionCount >= 3) return;
-    fn();
-    setInteractionCount((c) => c + 1);
+  const onLayoutChange = (l: LayoutId) => {
+    if (l === layout) return;
+    setLayout(l);
+    if (interactionCount < 3) setInteractionCount((c) => c + 1);
   };
 
   return (
@@ -155,14 +155,14 @@ function Configurator() {
         {step === 3 && (
           <Step3
             colorCount={colorCount}
-            setColorCount={(c) => onSimulatorChange(() => setColorCount(c))}
+            setColorCount={setColorCount}
             palettes={palettes}
             selectedPalette={selectedPalette}
-            setSelectedPalette={(p) => onSimulatorChange(() => setSelectedPalette(p))}
+            setSelectedPalette={setSelectedPalette}
             archetype={archetype}
-            setArchetype={(a) => onSimulatorChange(() => setArchetype(a))}
+            setArchetype={setArchetype}
             layout={layout}
-            setLayout={(l) => onSimulatorChange(() => setLayout(l))}
+            setLayout={onLayoutChange}
             previewDevice={previewDevice}
             setPreviewDevice={setPreviewDevice}
             interactionCount={interactionCount}
@@ -703,7 +703,7 @@ function Step3(props: {
                   Bozza pronta
                 </div>
                 <p className="max-w-xs text-sm text-slate-600">
-                  Hai esaurito le 3 modifiche live. Procedi per ricevere il tuo file di progetto.
+                  Hai esplorato 3 strutture di layout diverse. La tua bozza è pronta: procedi per ricevere il file di progetto.
                 </p>
                 <button
                   onClick={onNext}
@@ -719,7 +719,7 @@ function Step3(props: {
                 Disegna il tuo sito.
               </h2>
               <p className="mt-1 text-sm text-slate-600">
-                Ogni scelta aggiorna l'anteprima in tempo reale. <span className="font-semibold text-slate-900">{3 - interactionCount}</span> modifiche rimaste.
+                Colori, palette e stile sono illimitati. Puoi provare <span className="font-semibold text-slate-900">{Math.max(0, 3 - interactionCount)}</span> {3 - interactionCount === 1 ? "altra struttura di layout" : "altre strutture di layout"}.
               </p>
             </div>
 
