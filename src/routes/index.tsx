@@ -124,10 +124,10 @@ function Configurator() {
     setSelectedPalette(palettes.find((p) => p.best) ?? palettes[0]);
   }, [colorCount]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onSimulatorChange = (fn: () => void) => {
-    if (interactionCount >= 3) return;
-    fn();
-    setInteractionCount((c) => c + 1);
+  const onLayoutChange = (l: LayoutId) => {
+    if (l === layout) return;
+    setLayout(l);
+    if (interactionCount < 3) setInteractionCount((c) => c + 1);
   };
 
   return (
