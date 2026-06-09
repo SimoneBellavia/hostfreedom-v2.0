@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { sendAdminReport } from "@/lib/api/report.functions";
 import { type LucideIcon,
   ArrowRight, Sparkles, Lock, ShieldCheck, Calculator, Palette,
   LayoutGrid, Monitor, Smartphone, Check, Star, MapPin, Wifi,
@@ -100,7 +101,6 @@ function Configurator() {
   const [archetype, setArchetype] = useState<string>("coastal");
   const [layout, setLayout] = useState<LayoutId>("classic");
   const [previewDevice, setPreviewDevice] = useState<"mobile" | "desktop">("mobile");
-  const [interactionCount, setInteractionCount] = useState(0);
   const [mobileTab, setMobileTab] = useState<"controls" | "preview">("controls");
 
   // Lead form
@@ -127,7 +127,6 @@ function Configurator() {
   const onLayoutChange = (l: LayoutId) => {
     if (l === layout) return;
     setLayout(l);
-    if (interactionCount < 3) setInteractionCount((c) => c + 1);
   };
 
   return (
@@ -165,7 +164,6 @@ function Configurator() {
             setLayout={onLayoutChange}
             previewDevice={previewDevice}
             setPreviewDevice={setPreviewDevice}
-            interactionCount={interactionCount}
             mobileTab={mobileTab}
             setMobileTab={setMobileTab}
             onNext={() => setStep(4)}
@@ -752,17 +750,14 @@ function Step3(props: {
   archetype: string; setArchetype: (a: string) => void;
   layout: LayoutId; setLayout: (l: LayoutId) => void;
   previewDevice: "mobile" | "desktop"; setPreviewDevice: (d: "mobile" | "desktop") => void;
-  interactionCount: number;
   mobileTab: "controls" | "preview"; setMobileTab: (t: "controls" | "preview") => void;
   onNext: () => void;
 }) {
   const {
     colorCount, setColorCount, palettes, selectedPalette, setSelectedPalette,
     archetype, setArchetype, layout, setLayout,
-    previewDevice, setPreviewDevice, interactionCount, mobileTab, setMobileTab, onNext,
+    previewDevice, setPreviewDevice, mobileTab, setMobileTab, onNext,
   } = props;
-
-  const locked = interactionCount >= 3;
 
   return (
     <section className="pt-4 md:pt-6">
@@ -788,32 +783,13 @@ function Step3(props: {
         {/* CONTROL PANEL */}
         <div className={`${mobileTab === "controls" ? "block" : "hidden"} md:sticky md:top-24 md:block md:max-h-[calc(100vh-7rem)] md:overflow-y-auto md:pr-2`}>
           <div className="relative space-y-6">
-            {locked && (
-              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 rounded-2xl bg-white/70 p-6 text-center backdrop-blur-md">
-                <div className="grid h-12 w-12 place-items-center rounded-full bg-slate-900 text-white">
-                  <Lock className="h-5 w-5" />
-                </div>
-                <div className="font-serif-display text-xl font-semibold text-slate-900">
-                  Bozza pronta
-                </div>
-                <p className="max-w-xs text-sm text-slate-600">
-                  Hai esplorato 3 strutture di layout diverse. La tua bozza è pronta: procedi per ricevere il file di progetto.
-                </p>
-                <button
-                  onClick={onNext}
-                  className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white"
-                >
-                  Continua <ArrowRight className="h-4 w-4" />
-                </button>
-              </div>
-            )}
 
             <div>
               <h2 className="font-serif-display text-3xl font-semibold tracking-tight text-slate-900">
                 Disegna il tuo sito.
               </h2>
               <p className="mt-1 text-sm text-slate-600">
-                Colori, palette e stile sono illimitati. Puoi provare <span className="font-semibold text-slate-900">{Math.max(0, 3 - interactionCount)}</span> {3 - interactionCount === 1 ? "altra struttura di layout" : "altre strutture di layout"}.
+                Colori, palette e stile sono illimitati. Esplora liberamente tutte le combinazioni.
               </p>
             </div>
 
@@ -1416,8 +1392,10 @@ function Step4(props: {
 }) {
   const { email, setEmail, phone, setPhone, struct, setStruct, city, setCity, error, setError, onNext } = props;
   const submit = () => {
-    if (!email.includes("@") || email.length < 5) return setError("Inserisci una email valida.");
-    if (phone.replace(/\D/g, "").length < 7) return setError("Inserisci un numero di telefono valido.");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    if (!emailRegex.test(email.trim())) return setError("Inserisci una email valida (es. mario@villaserena.it).");
+    const phoneDigits = phone.replace(/\D/g, "");
+    if (phoneDigits.length !== 10) return setError("Inserisci un numero di telefono di esattamente 10 cifre numeriche.");
     if (!struct.trim()) return setError("Inserisci il nome della struttura.");
     if (!city.trim()) return setError("Inserisci la città della struttura.");
     setError(null);
@@ -1440,7 +1418,7 @@ function Step4(props: {
           <IconInput icon={Mail} type="email" value={email} onChange={setEmail} placeholder="mario@villaserena.it" />
         </Field>
         <Field label="Numero di telefono" tooltip="Il tuo numero serve esclusivamente per l'invio della configurazione finale e per un contatto diretto via WhatsApp con il tuo consulente dedicato. Zero spam garantito.">
-          <IconInput icon={Phone} type="tel" value={phone} onChange={setPhone} placeholder="+39 333 1234567" />
+          <IconInput icon={Phone} type="tel" value={phone} onChange={setPhone} placeholder="3331234567" />
         </Field>
         <Field label="Nome della struttura principale">
           <IconInput icon={Home} value={struct} onChange={setStruct} placeholder="Villa Serena" />
@@ -1525,6 +1503,9 @@ function Step5({
     if (code === correctOtp) {
       setSuccess(true);
       setError(null);
+      sendAdminReport({ data: payload as Parameters<typeof sendAdminReport>[0]["data"] }).catch(
+        (err) => console.error("Admin report failed:", err),
+      );
     } else {
       const n = attempts + 1;
       setAttempts(n);
@@ -1547,8 +1528,8 @@ function Step5({
           <h2 className="mt-5 font-serif-display text-4xl font-semibold leading-tight text-slate-900 md:text-5xl">
             Sei dentro.
           </h2>
-          <p className="mx-auto mt-3 max-w-md text-base text-slate-600">
-            Il tuo progetto è stato salvato in modo sicuro nella tua <strong>istanza dedicata</strong>. Riceverai entro pochi minuti il PDF del calcolo, la bozza del tuo sito, e l'accesso al workspace.
+          <p className="mx-auto mt-3 max-w-lg text-base text-slate-600">
+            La tua configurazione iniziale e i tuoi dati sono stati salvati con successo. Il team di HostFreedom ti contatterà nelle prossime ore per una consulenza privata esclusiva. Analizzeremo insieme la struttura strategica del tuo nuovo sito web, definiremo il tuo preventivo su misura e valuteremo l'impatto economico reale che la nostra piattaforma porterà alla tua attività per liberarti per sempre dalle commissioni delle OTA.
           </p>
 
           <div className="mt-6 grid gap-2 text-left md:grid-cols-3">
