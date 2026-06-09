@@ -246,11 +246,19 @@ function Configurator() {
    HEADER / FOOTER
 ============================================================================ */
 
+const STEP_META = [
+  { label: "Dati", subtitle: "Input Rapido", peace: "Frizione Zero" },
+  { label: "Verdetto", subtitle: "Verdetto Fiscale", peace: "100% Anonimo e Locale · No Server Storage" },
+  { label: "Design", subtitle: "Laboratorio Creativo", peace: "Esplorazione Libera e Illimitata" },
+  { label: "Contatti", subtitle: "Salvataggio Bozza", peace: "I tuoi dati sono protetti" },
+  { label: "Verifica", subtitle: "Convalida Sicura", peace: "Standard Bancario OTP" },
+] as const;
+
 function Header({ step }: { step: number }) {
-  const steps = ["Dati", "Verdetto", "Design", "Contatti", "Verifica"];
+  const current = STEP_META[step - 1];
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-[#FBFAF7]/85 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-[1400px] items-center justify-between px-4 py-4 md:px-8">
+      <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-4 py-4 md:px-8">
         <div className="flex items-center gap-2.5">
           <div className="grid h-9 w-9 place-items-center rounded-lg bg-slate-900 text-white">
             <KeyRound className="h-4 w-4" />
@@ -261,33 +269,57 @@ function Header({ step }: { step: number }) {
           </div>
         </div>
         <div className="hidden items-center gap-1 md:flex">
-          {steps.map((s, i) => {
+          {STEP_META.map((s, i) => {
             const n = i + 1;
             const active = step === n;
             const done = step > n;
             return (
-              <div key={s} className="flex items-center gap-2">
+              <div key={s.label} className="flex items-center gap-2">
                 <div
-                  className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition ${
+                  className={`group relative flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition ${
                     active
-                      ? "bg-slate-900 text-white"
+                      ? "bg-slate-900 text-white shadow-sm shadow-slate-900/10"
                       : done
-                      ? "bg-emerald-50 text-emerald-700"
-                      : "text-slate-400"
+                        ? "bg-emerald-50 text-emerald-700"
+                        : "text-slate-400"
                   }`}
                 >
-                  <span className="grid h-5 w-5 place-items-center rounded-full bg-white/15 text-[10px]">
+                  <span className={`grid h-5 w-5 place-items-center rounded-full text-[10px] ${active ? "bg-white/15" : done ? "bg-emerald-100" : "bg-slate-100"}`}>
                     {done ? <Check className="h-3 w-3" /> : n}
                   </span>
-                  {s}
+                  {s.label}
+                  <div className="pointer-events-none absolute left-1/2 top-full z-50 mt-2 hidden -translate-x-1/2 group-hover:block">
+                    <div className="w-56 rounded-xl border border-slate-200 bg-white px-3 py-2 text-left shadow-xl">
+                      <div className="text-[11px] font-semibold text-slate-900">{s.subtitle}</div>
+                      <div className="mt-0.5 flex items-center gap-1 text-[10px] text-slate-500">
+                        <ShieldCheck className="h-3 w-3 text-emerald-600" /> {s.peace}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                {i < steps.length - 1 && <div className="h-px w-4 bg-slate-200" />}
+                {i < STEP_META.length - 1 && (
+                  <div className={`h-px w-4 transition ${done ? "bg-emerald-300" : "bg-slate-200"}`} />
+                )}
               </div>
             );
           })}
         </div>
-        <div className="text-xs text-slate-500 md:hidden">
-          Step <span className="font-semibold text-slate-900">{step}</span>/5
+        <div className="hidden min-w-0 flex-col items-end text-right md:flex">
+          <div className="font-serif-display text-sm font-semibold italic text-slate-900">{current.subtitle}</div>
+          <div className="flex items-center gap-1 text-[10px] uppercase tracking-[0.14em] text-emerald-700">
+            <ShieldCheck className="h-3 w-3" /> {current.peace}
+          </div>
+        </div>
+        <div className="flex flex-col items-end text-right md:hidden">
+          <div className="text-[11px] font-semibold text-slate-900">
+            Passo {step}/5 · <span className="font-serif-display italic">{current.subtitle}</span>
+          </div>
+          <div className="mt-0.5 flex items-center gap-1 text-[9px] uppercase tracking-[0.14em] text-emerald-700">
+            <ShieldCheck className="h-2.5 w-2.5" /> {current.peace}
+          </div>
+          <div className="mt-1.5 h-1 w-24 overflow-hidden rounded-full bg-slate-200">
+            <div className="h-full rounded-full bg-slate-900 transition-all duration-500" style={{ width: `${(step / 5) * 100}%` }} />
+          </div>
         </div>
       </div>
     </header>
