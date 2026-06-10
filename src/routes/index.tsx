@@ -1622,14 +1622,6 @@ function Step5({
             <Stat label="Contatti" value="Verificati" />
           </div>
 
-          <details className="mt-8 text-left">
-            <summary className="cursor-pointer text-xs font-semibold uppercase tracking-wider text-slate-500">
-              Mostra payload tecnico
-            </summary>
-            <pre className="mt-3 max-h-72 overflow-auto rounded-xl bg-slate-900 p-4 text-[11px] leading-relaxed text-emerald-200">
-{JSON.stringify(payload, null, 2)}
-            </pre>
-          </details>
         </div>
       </section>
     );
