@@ -356,7 +356,7 @@ function Step1({
         <Sparkles className="h-3 w-3" /> Passo 1 di 5 · 30 secondi
       </div>
       <h1 className="font-serif-display text-4xl font-semibold tracking-tight text-slate-900 md:text-6xl">
-        Quanto stai <em className="italic text-slate-500">davvero</em> lasciando<br /> sul tavolo?
+        Quanto stai <em className="italic text-emerald-500">davvero</em> lasciando<br /> sul tavolo?
       </h1>
       <p className="mt-4 max-w-xl text-base text-slate-600 md:text-lg">
         Inserisci due dati. In tre secondi calcoliamo, <strong>localmente nel tuo browser</strong>, quante commissioni stai regalando ai portali — e cosa significherebbe averle nel tuo conto.
@@ -609,7 +609,68 @@ function Step2({
         />
       </div>
 
-      {/* Manifesto */}
+      {/* Awareness — Cosa stai davvero perdendo */}
+      <div className="mt-12">
+        <div className="mb-6 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">
+          <Sparkles className="h-3.5 w-3.5" /> Cosa stai davvero perdendo
+        </div>
+        <h3 className="font-serif-display text-3xl font-semibold leading-tight text-slate-900 md:text-4xl">
+          Le commissioni sono solo<br className="hidden md:block" /> la punta dell'iceberg.
+        </h3>
+        <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-slate-600">
+          Ogni prenotazione via OTA ti costa molto di più del 15% visibile. Ecco cosa rischi davvero — e perché un canale diretto cambia le regole del gioco.
+        </p>
+
+        <div className="mt-8 grid gap-5 md:grid-cols-3">
+          {/* Card 1 — Asset cliente */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+            <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-rose-600">
+              <Lock className="h-5 w-5" />
+            </div>
+            <h4 className="mt-4 font-serif-display text-xl font-semibold text-slate-900">
+              Perdi l'asset più prezioso: il cliente.
+            </h4>
+            <p className="mt-2 text-sm leading-relaxed text-slate-600">
+              Regalare commissioni alle OTA significa anche regalare la <strong>relazione</strong> con l'ospite. Le piattaforme si appropriano del contatto reale: a te resta solo una <em>mail temporanea anonimizzata</em>, che rende impossibile qualsiasi strategia di fidelizzazione, upselling o riprenotazione diretta.
+            </p>
+          </div>
+
+          {/* Card 2 — Effetto Billboard */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+            <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
+              <Sparkles className="h-5 w-5" />
+            </div>
+            <h4 className="mt-4 font-serif-display text-xl font-semibold text-slate-900">
+              L'Effetto Billboard: usa le OTA come vetrina.
+            </h4>
+            <p className="mt-2 text-sm leading-relaxed text-slate-600">
+              Non conviene chiudere Booking o Airbnb — conviene <strong>sfruttarli</strong>. I viaggiatori più attenti ti trovano sulle OTA, notano i prezzi gonfiati dalle commissioni e poi cercano la tua struttura su Google per prenotare direttamente e risparmiare. Le OTA diventano il tuo cartellone pubblicitario gratuito.
+            </p>
+          </div>
+
+          {/* Card 3 — Canale diretto */}
+          <div className="rounded-2xl border border-emerald-200/70 bg-gradient-to-br from-emerald-50/80 via-white to-white p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+            <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500 text-white">
+              <Check className="h-5 w-5" />
+            </div>
+            <h4 className="mt-4 font-serif-display text-xl font-semibold text-slate-900">
+              Canale diretto: 0% commissioni, cash flow immediato.
+            </h4>
+            <ul className="mt-2 space-y-2 text-sm leading-relaxed text-slate-700">
+              <li className="flex gap-2">
+                <Check className="mt-0.5 h-4 w-4 flex-none text-emerald-600" />
+                <span>Una prenotazione da <strong>1.000€</strong> ti lascia <strong>1.000€</strong>. Noi non tratteniamo nulla e il cliente prenota più volentieri, perché non trova prezzi gonfiati da commissioni nascoste.</span>
+              </li>
+              <li className="flex gap-2">
+                <Check className="mt-0.5 h-4 w-4 flex-none text-emerald-600" />
+                <span>I fondi arrivano sul <strong>tuo conto corrente in pochi secondi</strong> dalla prenotazione — basta attese di settimane o mesi tipiche delle OTA.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+
       <div className="relative mt-12 overflow-hidden rounded-3xl border border-emerald-200/60 bg-gradient-to-br from-emerald-50/80 via-white to-white p-6 md:p-10">
         <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-emerald-200/30 blur-3xl" />
         <div className="relative">
@@ -1413,7 +1474,16 @@ function Step4(props: {
         Riceverai via email il PDF della bozza, il calcolo del risparmio e l'accesso al tuo workspace dedicato.
       </p>
 
-      <div className="mt-8 space-y-4 rounded-2xl border border-slate-200 bg-white p-6 md:p-8">
+      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-emerald-200/70 bg-emerald-50/60 p-4 md:p-5">
+        <div className="mt-0.5 inline-flex h-8 w-8 flex-none items-center justify-center rounded-lg bg-emerald-500 text-white">
+          <ShieldCheck className="h-4 w-4" />
+        </div>
+        <p className="text-[13px] leading-relaxed text-slate-700 md:text-sm">
+          Queste informazioni ci servono <strong>esclusivamente</strong> per ricontattarti entro <strong>24–48 ore</strong> e fissare una <strong>consulenza strategica dedicata</strong>, gratuita e senza impegno. Passeremo subito all'azione per rendere la tua struttura davvero <em>indipendente</em> dalle OTA. Zero spam, zero cessione dati a terzi.
+        </p>
+      </div>
+
+      <div className="mt-6 space-y-4 rounded-2xl border border-slate-200 bg-white p-6 md:p-8">
         <Field label="Email di contatto" hint="Useremo questa email per inviarti il file di progetto e il codice OTP.">
           <IconInput icon={Mail} type="email" value={email} onChange={setEmail} placeholder="mario@villaserena.it" />
         </Field>
@@ -1503,8 +1573,8 @@ function Step5({
     if (code === correctOtp) {
       setSuccess(true);
       setError(null);
-      sendAdminReport({ data: payload as Parameters<typeof sendAdminReport>[0]["data"] }).catch(
-        (err) => console.error("Admin report failed:", err),
+      sendAdminReport({ data: payload } as Parameters<typeof sendAdminReport>[0]).catch(
+        (err: unknown) => console.error("Admin report failed:", err),
       );
     } else {
       const n = attempts + 1;
@@ -1526,11 +1596,19 @@ function Step5({
             <CheckCircle2 className="h-8 w-8" />
           </div>
           <h2 className="mt-5 font-serif-display text-4xl font-semibold leading-tight text-slate-900 md:text-5xl">
-            Sei dentro.
+            Grazie. Hai fatto la scelta giusta.
           </h2>
-          <p className="mx-auto mt-3 max-w-lg text-base text-slate-600">
-            La tua configurazione iniziale e i tuoi dati sono stati salvati con successo. Il team di HostFreedom ti contatterà nelle prossime ore per una consulenza privata esclusiva. Analizzeremo insieme la struttura strategica del tuo nuovo sito web, definiremo il tuo preventivo su misura e valuteremo l'impatto economico reale che la nostra piattaforma porterà alla tua attività per liberarti per sempre dalle commissioni delle OTA.
+          <p className="mx-auto mt-3 max-w-xl text-base leading-relaxed text-slate-600">
+            Grazie per la pazienza e la fiducia: <strong>complimenti</strong>, hai compiuto un passo eccellente per il futuro del tuo business. Ti ricontatteremo entro <strong>24–48 ore</strong> per la tua consulenza strategica dedicata.
           </p>
+          <div className="mx-auto mt-5 max-w-xl rounded-2xl border border-emerald-200/70 bg-gradient-to-br from-emerald-50/80 to-white p-5 text-left md:p-6">
+            <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+              <ShieldCheck className="h-3.5 w-3.5" /> Il nostro impegno
+            </div>
+            <p className="mt-2 text-[15px] leading-relaxed text-slate-700">
+              Non siamo la classica agenzia web che genera un sito standardizzato tanto per farlo. Il nostro obiettivo è creare <strong>reale valore imprenditoriale</strong> per gli host, fornendo gli strumenti necessari per renderli <em className="text-emerald-700 not-italic font-semibold">liberi, autonomi e totalmente indipendenti</em> dalle piattaforme di intermediazione.
+            </p>
+          </div>
 
           <div className="mt-6 grid gap-2 text-left md:grid-cols-3">
             <Stat label="Profilo Host" value="Salvato" />
