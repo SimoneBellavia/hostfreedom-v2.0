@@ -213,6 +213,7 @@ function Configurator() {
                 colorCount,
                 followedRecommendation: selectedPalette.best === true,
                 paletteName: selectedPalette.name,
+                paletteId: selectedPalette.id,
                 hexMap: {
                   background: selectedPalette.bg,
                   text: selectedPalette.text,
@@ -220,6 +221,11 @@ function Configurator() {
                   highlight: selectedPalette.accent ?? selectedPalette.cta,
                 },
                 archetype,
+                archetypeName: ARCHETYPES.find((a) => a.id === archetype)?.name ?? archetype,
+                layoutId: layout,
+                layoutName: LAYOUTS.find((l) => l.id === layout)?.name ?? layout,
+                fiscalRegime: regime,
+                previewDevice,
               },
               structuralLayout: LAYOUT_BLOCKS[layout].reduce(
                 (acc, b, i) => ({ ...acc, [`block_${i + 1}`]: b }),
