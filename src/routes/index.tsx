@@ -1596,11 +1596,19 @@ function Step5({
             <CheckCircle2 className="h-8 w-8" />
           </div>
           <h2 className="mt-5 font-serif-display text-4xl font-semibold leading-tight text-slate-900 md:text-5xl">
-            Sei dentro.
+            Grazie. Hai fatto la scelta giusta.
           </h2>
-          <p className="mx-auto mt-3 max-w-lg text-base text-slate-600">
-            La tua configurazione iniziale e i tuoi dati sono stati salvati con successo. Il team di HostFreedom ti contatterà nelle prossime ore per una consulenza privata esclusiva. Analizzeremo insieme la struttura strategica del tuo nuovo sito web, definiremo il tuo preventivo su misura e valuteremo l'impatto economico reale che la nostra piattaforma porterà alla tua attività per liberarti per sempre dalle commissioni delle OTA.
+          <p className="mx-auto mt-3 max-w-xl text-base leading-relaxed text-slate-600">
+            Grazie per la pazienza e la fiducia: <strong>complimenti</strong>, hai compiuto un passo eccellente per il futuro del tuo business. Ti ricontatteremo entro <strong>24–48 ore</strong> per la tua consulenza strategica dedicata.
           </p>
+          <div className="mx-auto mt-5 max-w-xl rounded-2xl border border-emerald-200/70 bg-gradient-to-br from-emerald-50/80 to-white p-5 text-left md:p-6">
+            <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+              <ShieldCheck className="h-3.5 w-3.5" /> Il nostro impegno
+            </div>
+            <p className="mt-2 text-[15px] leading-relaxed text-slate-700">
+              Non siamo la classica agenzia web che genera un sito standardizzato tanto per farlo. Il nostro obiettivo è creare <strong>reale valore imprenditoriale</strong> per gli host, fornendo gli strumenti necessari per renderli <em className="text-emerald-700 not-italic font-semibold">liberi, autonomi e totalmente indipendenti</em> dalle piattaforme di intermediazione.
+            </p>
+          </div>
 
           <div className="mt-6 grid gap-2 text-left md:grid-cols-3">
             <Stat label="Profilo Host" value="Salvato" />
