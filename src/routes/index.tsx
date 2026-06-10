@@ -130,9 +130,9 @@ function Configurator() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FBFAF7] text-slate-900">
+    <div className="min-h-screen overflow-x-hidden bg-[#FBFAF7] text-slate-900">
       <Header step={step} />
-      <main className="mx-auto w-full max-w-[1400px] px-4 pb-32 pt-6 md:px-8">
+      <main className="mx-auto w-full max-w-[1400px] overflow-x-hidden px-4 pb-32 pt-6 md:px-8">
         {step === 1 && (
           <Step1
             revenue={revenue}
