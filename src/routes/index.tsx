@@ -1503,8 +1503,8 @@ function Step5({
     if (code === correctOtp) {
       setSuccess(true);
       setError(null);
-      sendAdminReport({ data: payload as Parameters<typeof sendAdminReport>[0]["data"] }).catch(
-        (err) => console.error("Admin report failed:", err),
+      sendAdminReport({ data: payload } as Parameters<typeof sendAdminReport>[0]).catch(
+        (err: unknown) => console.error("Admin report failed:", err),
       );
     } else {
       const n = attempts + 1;
