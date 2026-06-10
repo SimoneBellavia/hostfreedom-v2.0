@@ -356,7 +356,7 @@ function Step1({
         <Sparkles className="h-3 w-3" /> Passo 1 di 5 · 30 secondi
       </div>
       <h1 className="font-serif-display text-4xl font-semibold tracking-tight text-slate-900 md:text-6xl">
-        Quanto stai <em className="italic text-slate-500">davvero</em> lasciando<br /> sul tavolo?
+        Quanto stai <em className="italic text-emerald-500">davvero</em> lasciando<br /> sul tavolo?
       </h1>
       <p className="mt-4 max-w-xl text-base text-slate-600 md:text-lg">
         Inserisci due dati. In tre secondi calcoliamo, <strong>localmente nel tuo browser</strong>, quante commissioni stai regalando ai portali — e cosa significherebbe averle nel tuo conto.
