@@ -1474,7 +1474,16 @@ function Step4(props: {
         Riceverai via email il PDF della bozza, il calcolo del risparmio e l'accesso al tuo workspace dedicato.
       </p>
 
-      <div className="mt-8 space-y-4 rounded-2xl border border-slate-200 bg-white p-6 md:p-8">
+      <div className="mt-6 flex items-start gap-3 rounded-2xl border border-emerald-200/70 bg-emerald-50/60 p-4 md:p-5">
+        <div className="mt-0.5 inline-flex h-8 w-8 flex-none items-center justify-center rounded-lg bg-emerald-500 text-white">
+          <ShieldCheck className="h-4 w-4" />
+        </div>
+        <p className="text-[13px] leading-relaxed text-slate-700 md:text-sm">
+          Queste informazioni ci servono <strong>esclusivamente</strong> per ricontattarti entro <strong>24–48 ore</strong> e fissare una <strong>consulenza strategica dedicata</strong>, gratuita e senza impegno. Passeremo subito all'azione per rendere la tua struttura davvero <em>indipendente</em> dalle OTA. Zero spam, zero cessione dati a terzi.
+        </p>
+      </div>
+
+      <div className="mt-6 space-y-4 rounded-2xl border border-slate-200 bg-white p-6 md:p-8">
         <Field label="Email di contatto" hint="Useremo questa email per inviarti il file di progetto e il codice OTP.">
           <IconInput icon={Mail} type="email" value={email} onChange={setEmail} placeholder="mario@villaserena.it" />
         </Field>
