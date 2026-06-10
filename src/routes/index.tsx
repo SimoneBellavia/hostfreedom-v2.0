@@ -101,7 +101,6 @@ function Configurator() {
   const [archetype, setArchetype] = useState<string>("coastal");
   const [layout, setLayout] = useState<LayoutId>("classic");
   const [previewDevice, setPreviewDevice] = useState<"mobile" | "desktop">("mobile");
-  const [mobileTab, setMobileTab] = useState<"controls" | "preview">("controls");
 
   // Lead form
   const [leadEmail, setLeadEmail] = useState("");
@@ -164,8 +163,6 @@ function Configurator() {
             setLayout={onLayoutChange}
             previewDevice={previewDevice}
             setPreviewDevice={setPreviewDevice}
-            mobileTab={mobileTab}
-            setMobileTab={setMobileTab}
             onNext={() => setStep(4)}
           />
         )}
@@ -817,7 +814,6 @@ function Step3(props: {
   archetype: string; setArchetype: (a: string) => void;
   layout: LayoutId; setLayout: (l: LayoutId) => void;
   previewDevice: "mobile" | "desktop"; setPreviewDevice: (d: "mobile" | "desktop") => void;
-  mobileTab: "controls" | "preview"; setMobileTab: (t: "controls" | "preview") => void;
   onNext: () => void;
 }) {
   const {
@@ -826,225 +822,294 @@ function Step3(props: {
     previewDevice, setPreviewDevice, onNext,
   } = props;
 
-  const [showPreview, setShowPreview] = useState(false);
-  const previewRef = useRef<HTMLDivElement | null>(null);
+  type SubStep = 1 | 2 | 3 | 4;
+  const [subStep, setSubStep] = useState<SubStep>(1);
 
-  const handleShowPreview = () => {
-    setShowPreview(true);
-    setTimeout(() => {
-      previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 80);
-  };
+  const goToPalette = () => { setSubStep(1); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const goToStyle = () => { setSubStep(2); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const goToLayout = () => { setSubStep(3); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const goToPreview = () => { setSubStep(4); window.scrollTo({ top: 0, behavior: "smooth" }); };
+
+  const progressPct = subStep === 1 ? 25 : subStep === 2 ? 50 : subStep === 3 ? 75 : 100;
 
   return (
     <section className="pt-4 md:pt-6">
       <div className="mx-auto w-full max-w-3xl">
-        <div className="space-y-6">
-          <div className="text-center md:text-left">
-            <h2 className="font-serif-display text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
-              Disegna il tuo sito.
-            </h2>
-            <p className="mx-auto mt-2 max-w-xl text-sm text-slate-600 md:mx-0">
-              Colori, palette e stile sono illimitati. Esplora liberamente tutte le combinazioni — quando sei pronto, genera l'anteprima.
-            </p>
+        {/* Progress indicator */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between gap-2 text-[11px] font-medium text-slate-500">
+            <span>Passo {subStep} di 4</span>
+            <div className="flex items-center gap-1">
+              <span>{subStep === 1 ? "Palette" : subStep === 2 ? "Stile" : subStep === 3 ? "Layout" : "Anteprima"}</span>
+            </div>
           </div>
+          <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-200">
+            <div
+              className="h-full rounded-full bg-slate-900 transition-all duration-500"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+        </div>
 
-          {/* Phase 3A */}
-          <Panel title="01 · Complessità cromatica" icon={Palette}>
-            <div className="flex rounded-xl bg-slate-100 p-1 text-sm font-semibold">
-              {[2, 3, 4].map((c) => (
-                <button
-                  key={c}
-                  onClick={() => setColorCount(c as 2 | 3 | 4)}
-                  className={`flex-1 rounded-lg px-3 py-2.5 transition ${
-                    colorCount === c ? "bg-white text-slate-900 shadow-sm" : "text-slate-500"
-                  }`}
-                >
-                  {c} Colori
-                </button>
-              ))}
-            </div>
-            <div className="mt-4 rounded-xl border border-amber-200/70 bg-amber-50/60 p-4 text-[13px] leading-relaxed text-amber-950">
-              <div className="font-semibold">💡 Il consiglio del designer</div>
-              <p className="mt-1 text-amber-900/90">
-                La configurazione a <strong>3 Colori</strong> è la più utilizzata e performante nel turismo (formula 60-30-10). Riduce il carico cognitivo, focalizza lo sguardo sul pulsante di prenotazione e <strong>aumenta le conversioni del 18%</strong> rispetto a layout multicolore.
-              </p>
-            </div>
-          </Panel>
-
-          {/* Phase 3B */}
-          <Panel title="02 · Palette" icon={Sparkles}>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {palettes.map((p) => (
-                <PaletteCard
-                  key={p.id}
-                  palette={p}
-                  active={selectedPalette.id === p.id}
-                  onClick={() => setSelectedPalette(p)}
-                />
-              ))}
-            </div>
-          </Panel>
-
-          {/* Archetypes */}
-          <Panel title="03 · Stile estetico" icon={Star}>
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-              {ARCHETYPES.map((a) => {
-                const isRecommended = a.id === "urban";
-                const isActive = archetype === a.id;
-                return (
-                  <button
-                    key={a.id}
-                    onClick={() => setArchetype(a.id)}
-                    className={`relative rounded-xl border p-3 text-left transition ${
-                      isActive
-                        ? "border-slate-900 bg-slate-900 text-white"
-                        : isRecommended
-                          ? "border-amber-300 bg-gradient-to-br from-amber-50 to-white hover:border-amber-400"
-                          : "border-slate-200 bg-white hover:border-slate-300"
-                    }`}
-                  >
-                    <div className="flex items-center gap-1.5">
-                      <div className="text-sm font-semibold">{a.name}</div>
-                    </div>
-                    {isRecommended && (
-                      <div className={`mt-1 inline-flex items-center rounded-full px-2 py-0.5 text-[9px] font-semibold tracking-wide ${
-                        isActive ? "bg-amber-300/90 text-slate-900" : "bg-amber-100 text-amber-900 ring-1 ring-amber-300/60"
-                      }`}>
-                        ✨ Consigliato · Massima Conversione
-                      </div>
-                    )}
-                    <div className={`mt-1 text-[11px] ${isActive ? "text-slate-300" : "text-slate-500"}`}>
-                      {a.desc}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-            <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50/60 p-3 text-[11px] leading-relaxed text-slate-700">
-              💡 <span className="font-semibold text-slate-900">Il consiglio del designer:</span> Lo stile <em>"Minimal Modern"</em> è ideale per l'hospitality di alto livello. Riduce le distrazioni visive e mette al centro le immagini della tua struttura, aumentando la fiducia dell'ospite.
-            </div>
-          </Panel>
-
-          {/* Layouts */}
-          <Panel title="04 · Struttura della pagina" icon={LayoutGrid}>
-            <div className="space-y-2">
-              {LAYOUTS.map((l, idx) => {
-                const isRecommended = l.id === "classic";
-                const isActive = layout === l.id;
-                return (
-                  <button
-                    key={l.id}
-                    onClick={() => setLayout(l.id)}
-                    className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3 text-left transition ${
-                      isActive
-                        ? "border-slate-900 bg-slate-50"
-                        : isRecommended
-                          ? "border-amber-300 bg-gradient-to-r from-amber-50 to-white hover:border-amber-400"
-                          : "border-slate-200 bg-white hover:border-slate-300"
-                    }`}
-                  >
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <div className="text-sm font-semibold text-slate-900">Layout {idx + 1} · {l.name}</div>
-                        {isRecommended && (
-                          <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-semibold tracking-wide text-amber-900 ring-1 ring-amber-300/60">
-                            ✨ Più Performante
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-[11px] text-slate-500">{l.desc}</div>
-                    </div>
-                    {isActive && <Check className="h-4 w-4 shrink-0 text-slate-900" />}
-                  </button>
-                );
-              })}
-            </div>
-            <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50/60 p-3 text-[11px] leading-relaxed text-slate-700">
-              💡 <span className="font-semibold text-slate-900">Il consiglio del designer:</span> Questo layout posiziona il widget di ricerca date e disponibilità in primo piano. Riduce i passaggi necessari per prenotare e ottimizza l'esperienza touch da smartphone, dove avviene l'80% delle prenotazioni.
-            </div>
-          </Panel>
-
-          <OptimizationMeter
-            perfect={colorCount === 3 && selectedPalette.id === "costiera" && archetype === "urban" && layout === "classic"}
-          />
-
-          {/* Preview CTA — only visible until preview is generated */}
-          {!showPreview && (
-            <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-6 text-center md:p-8">
-              <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">
-                <Eye className="h-3 w-3" /> Pronto a vedere il risultato
+        <div className="space-y-6">
+          {/* STEP 1: Palette Selection */}
+          {subStep === 1 && (
+            <>
+              <div className="text-center md:text-left">
+                <h2 className="font-serif-display text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
+                  Scegli la tua palette.
+                </h2>
+                <p className="mx-auto mt-2 max-w-xl text-sm text-slate-600 md:mx-0">
+                  Definisci prima la complessità cromatica e poi seleziona la palette che meglio rappresenta il tuo brand.
+                </p>
               </div>
-              <h3 className="mx-auto mt-3 max-w-md font-serif-display text-2xl font-semibold leading-tight text-slate-900 md:text-3xl">
-                Genera l'anteprima del tuo brand
-              </h3>
-              <p className="mx-auto mt-2 max-w-md text-[13px] leading-relaxed text-slate-600">
-                Visualizza in un click come prenderà vita il tuo sito di prenotazione diretta con la combinazione che hai scelto.
-              </p>
+
+              <Panel title="Complessità cromatica" icon={Palette}>
+                <div className="flex rounded-xl bg-slate-100 p-1 text-sm font-semibold">
+                  {[2, 3, 4].map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => setColorCount(c as 2 | 3 | 4)}
+                      className={`flex-1 rounded-lg px-3 py-2.5 transition ${
+                        colorCount === c ? "bg-white text-slate-900 shadow-sm" : "text-slate-500"
+                      }`}
+                    >
+                      {c} Colori
+                    </button>
+                  ))}
+                </div>
+                <div className="mt-4 rounded-xl border border-amber-200/70 bg-amber-50/60 p-4 text-[13px] leading-relaxed text-amber-950">
+                  <div className="font-semibold">Il consiglio del designer</div>
+                  <p className="mt-1 text-amber-900/90">
+                    La configurazione a <strong>3 Colori</strong> è la più utilizzata e performante nel turismo (formula 60-30-10). Riduce il carico cognitivo e <strong>aumenta le conversioni del 18%</strong>.
+                  </p>
+                </div>
+              </Panel>
+
+              <Panel title="Seleziona la palette" icon={Sparkles}>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {palettes.map((p) => (
+                    <PaletteCard
+                      key={p.id}
+                      palette={p}
+                      active={selectedPalette.id === p.id}
+                      onClick={() => setSelectedPalette(p)}
+                    />
+                  ))}
+                </div>
+              </Panel>
+
               <button
-                onClick={handleShowPreview}
-                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition hover:bg-slate-800 sm:w-auto"
+                onClick={goToStyle}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition hover:bg-slate-800"
               >
-                <Sparkles className="h-4 w-4" /> Anteprima del tuo sito web personalizzato
+                Successivo <ArrowRight className="h-4 w-4" />
               </button>
-            </div>
+            </>
           )}
 
-          {/* PREVIEW (sequential, appears after click) */}
-          {showPreview && (
-            <div ref={previewRef} className="rounded-2xl border border-slate-200 bg-white p-4 md:p-6">
-              <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                <div className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
-                  Anteprima live
-                </div>
-                <div className="flex rounded-lg bg-slate-100 p-1 text-xs font-medium">
-                  <button
-                    onClick={() => setPreviewDevice("mobile")}
-                    className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 transition ${
-                      previewDevice === "mobile" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500"
-                    }`}
-                  >
-                    <Smartphone className="h-3.5 w-3.5" /> Mobile
-                  </button>
-                  <button
-                    onClick={() => setPreviewDevice("desktop")}
-                    className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 transition ${
-                      previewDevice === "desktop" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500"
-                    }`}
-                  >
-                    <Monitor className="h-3.5 w-3.5" /> Desktop
-                  </button>
-                </div>
+          {/* STEP 2: Style Selection */}
+          {subStep === 2 && (
+            <>
+              <div className="text-center md:text-left">
+                <h2 className="font-serif-display text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
+                  Definisci lo stile.
+                </h2>
+                <p className="mx-auto mt-2 max-w-xl text-sm text-slate-600 md:mx-0">
+                  Scegli l'archetipo estetico che meglio comunica l'anima della tua struttura.
+                </p>
               </div>
 
-              <div className="flex justify-center">
-                <DevicePreview device={previewDevice}>
-                  <SitePreview palette={selectedPalette} layout={layout} archetype={archetype} device={previewDevice} />
-                </DevicePreview>
+              <Panel title="Stile estetico" icon={Star}>
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  {ARCHETYPES.map((a) => {
+                    const isRecommended = a.id === "urban";
+                    const isActive = archetype === a.id;
+                    return (
+                      <button
+                        key={a.id}
+                        onClick={() => setArchetype(a.id)}
+                        className={`relative rounded-xl border p-3 text-left transition ${
+                          isActive
+                            ? "border-slate-900 bg-slate-900 text-white"
+                            : isRecommended
+                              ? "border-amber-300 bg-gradient-to-br from-amber-50 to-white hover:border-amber-400"
+                              : "border-slate-200 bg-white hover:border-slate-300"
+                        }`}
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <div className="text-sm font-semibold">{a.name}</div>
+                        </div>
+                        {isRecommended && (
+                          <div className={`mt-1 inline-flex items-center rounded-full px-2 py-0.5 text-[9px] font-semibold tracking-wide ${
+                            isActive ? "bg-amber-300/90 text-slate-900" : "bg-amber-100 text-amber-900 ring-1 ring-amber-300/60"
+                          }`}>
+                            Consigliato · Massima Conversione
+                          </div>
+                        )}
+                        <div className={`mt-1 text-[11px] ${isActive ? "text-slate-300" : "text-slate-500"}`}>
+                          {a.desc}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50/60 p-3 text-[11px] leading-relaxed text-slate-700">
+                  <span className="font-semibold text-slate-900">Il consiglio del designer:</span> Lo stile <em>"Minimal Modern"</em> è ideale per l'hospitality di alto livello. Mette al centro le immagini della tua struttura.
+                </div>
+              </Panel>
+
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={goToLayout}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition hover:bg-slate-800"
+                >
+                  Successivo <ArrowRight className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={goToPalette}
+                  className="flex items-center justify-center gap-2 text-[12px] font-medium text-slate-500 underline-offset-2 hover:text-slate-800 hover:underline"
+                >
+                  <ChevronLeft className="h-3.5 w-3.5" /> Torna alla palette
+                </button>
+              </div>
+            </>
+          )}
+
+          {/* STEP 3: Layout Selection */}
+          {subStep === 3 && (
+            <>
+              <div className="text-center md:text-left">
+                <h2 className="font-serif-display text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
+                  Scegli il layout.
+                </h2>
+                <p className="mx-auto mt-2 max-w-xl text-sm text-slate-600 md:mx-0">
+                  Definisci la struttura della tua homepage in base al tipo di esperienza che vuoi offrire.
+                </p>
               </div>
 
-              <p className="mx-auto mt-4 max-w-md text-center text-[11px] leading-relaxed text-slate-500 md:text-left">
-                <strong className="text-slate-700">Attenzione:</strong> Questa è esclusivamente una bozza d'esempio generata automaticamente per mostrarti il potenziale del tuo brand. Non rappresenta il layout finale del sito, che verrà rifinito, personalizzato e ottimizzato su misura per te durante la nostra consulenza.
-              </p>
+              <Panel title="Struttura della pagina" icon={LayoutGrid}>
+                <div className="space-y-2">
+                  {LAYOUTS.map((l, idx) => {
+                    const isRecommended = l.id === "classic";
+                    const isActive = layout === l.id;
+                    return (
+                      <button
+                        key={l.id}
+                        onClick={() => setLayout(l.id)}
+                        className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3 text-left transition ${
+                          isActive
+                            ? "border-slate-900 bg-slate-50"
+                            : isRecommended
+                              ? "border-amber-300 bg-gradient-to-r from-amber-50 to-white hover:border-amber-400"
+                              : "border-slate-200 bg-white hover:border-slate-300"
+                        }`}
+                      >
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <div className="text-sm font-semibold text-slate-900">Layout {idx + 1} · {l.name}</div>
+                            {isRecommended && (
+                              <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-semibold tracking-wide text-amber-900 ring-1 ring-amber-300/60">
+                                Più Performante
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-[11px] text-slate-500">{l.desc}</div>
+                        </div>
+                        {isActive && <Check className="h-4 w-4 shrink-0 text-slate-900" />}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50/60 p-3 text-[11px] leading-relaxed text-slate-700">
+                  <span className="font-semibold text-slate-900">Il consiglio del designer:</span> Questo layout posiziona il widget di ricerca date in primo piano. Ottimizza l'esperienza touch da smartphone.
+                </div>
+              </Panel>
 
-              <div className="mt-5 flex flex-col items-center gap-2">
+              <OptimizationMeter
+                perfect={colorCount === 3 && selectedPalette.id === "costiera" && archetype === "urban" && layout === "classic"}
+              />
+
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={goToPreview}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition hover:bg-slate-800"
+                >
+                  <Eye className="h-4 w-4" /> Visualizza anteprima
+                </button>
+                <button
+                  onClick={goToStyle}
+                  className="flex items-center justify-center gap-2 text-[12px] font-medium text-slate-500 underline-offset-2 hover:text-slate-800 hover:underline"
+                >
+                  <ChevronLeft className="h-3.5 w-3.5" /> Torna allo stile
+                </button>
+              </div>
+            </>
+          )}
+
+          {/* STEP 4: Preview */}
+          {subStep === 4 && (
+            <>
+              <div className="text-center md:text-left">
+                <h2 className="font-serif-display text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
+                  Ecco la tua anteprima.
+                </h2>
+                <p className="mx-auto mt-2 max-w-xl text-sm text-slate-600 md:mx-0">
+                  Questa è una bozza d'esempio. Durante la consulenza personalizzeremo ogni dettaglio.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-slate-200 bg-white p-4 md:p-6">
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                  <div className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                    Anteprima live
+                  </div>
+                  <div className="flex rounded-lg bg-slate-100 p-1 text-xs font-medium">
+                    <button
+                      onClick={() => setPreviewDevice("mobile")}
+                      className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 transition ${
+                        previewDevice === "mobile" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500"
+                      }`}
+                    >
+                      <Smartphone className="h-3.5 w-3.5" /> Mobile
+                    </button>
+                    <button
+                      onClick={() => setPreviewDevice("desktop")}
+                      className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 transition ${
+                        previewDevice === "desktop" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500"
+                      }`}
+                    >
+                      <Monitor className="h-3.5 w-3.5" /> Desktop
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex justify-center">
+                  <DevicePreview device={previewDevice}>
+                    <SitePreview palette={selectedPalette} layout={layout} archetype={archetype} device={previewDevice} />
+                  </DevicePreview>
+                </div>
+
+                <p className="mx-auto mt-4 max-w-md text-center text-[11px] leading-relaxed text-slate-500 md:text-left">
+                  <strong className="text-slate-700">Attenzione:</strong> Questa è esclusivamente una bozza d'esempio generata automaticamente per mostrarti il potenziale del tuo brand. Non rappresenta il layout finale del sito.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-3">
                 <button
                   onClick={onNext}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition hover:bg-slate-800 sm:w-auto"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition hover:bg-slate-800"
                 >
                   Salva questa bozza e procedi <ArrowRight className="h-4 w-4" />
                 </button>
                 <button
-                  onClick={() => {
-                    setShowPreview(false);
-                    setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 50);
-                  }}
-                  className="text-[12px] font-medium text-slate-500 underline-offset-2 hover:text-slate-800 hover:underline"
+                  onClick={goToLayout}
+                  className="flex items-center justify-center gap-2 text-[12px] font-medium text-slate-500 underline-offset-2 hover:text-slate-800 hover:underline"
                 >
-                  ← Torna a modificare lo stile
+                  <ChevronLeft className="h-3.5 w-3.5" /> Torna al layout
                 </button>
               </div>
-            </div>
+            </>
           )}
         </div>
       </div>
