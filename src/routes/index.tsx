@@ -117,6 +117,11 @@ function Configurator() {
   const [otpError, setOtpError] = useState<string | null>(null);
   const correctOtp = useRef("482913");
 
+  // Legal consent + preview screenshot
+  const [legalAccepted, setLegalAccepted] = useState(false);
+  const [openLegal, setOpenLegal] = useState<LegalDoc>(null);
+  const [previewScreenshot, setPreviewScreenshot] = useState<string | null>(null);
+
   const palettes = colorCount === 2 ? PALETTES_2 : colorCount === 3 ? PALETTES_3 : PALETTES_4;
 
   // When color count changes, reset to recommended palette of that group
