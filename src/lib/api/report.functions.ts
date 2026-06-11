@@ -7,13 +7,15 @@ const ReportSchema = z.object({
     properties: z.number(),
     taxTier: z.string(),
   }),
-  styleConfig: z.object({
-    colorCount: z.number(),
-    followedRecommendation: z.boolean(),
-    paletteName: z.string(),
-    hexMap: z.record(z.string()),
-    archetype: z.string(),
-  }),
+  styleConfig: z
+    .object({
+      colorCount: z.number(),
+      followedRecommendation: z.boolean(),
+      paletteName: z.string(),
+      hexMap: z.record(z.string()),
+      archetype: z.string(),
+    })
+    .passthrough(),
   structuralLayout: z.record(z.string()),
   lead: z.object({
     email: z.string(),
@@ -21,6 +23,7 @@ const ReportSchema = z.object({
     structureName: z.string(),
     city: z.string(),
   }),
+  previewScreenshot: z.string().optional(),
 });
 
 export const sendAdminReport = createServerFn({ method: "POST" })
