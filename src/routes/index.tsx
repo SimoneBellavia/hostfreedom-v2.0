@@ -144,6 +144,9 @@ function Configurator() {
             setRevenue={setRevenue}
             properties={properties}
             setProperties={setProperties}
+            legalAccepted={legalAccepted}
+            setLegalAccepted={setLegalAccepted}
+            onOpenLegal={setOpenLegal}
             onNext={() => setStep(2)}
           />
         )}
@@ -169,6 +172,7 @@ function Configurator() {
             setLayout={onLayoutChange}
             previewDevice={previewDevice}
             setPreviewDevice={setPreviewDevice}
+            setPreviewScreenshot={setPreviewScreenshot}
             onNext={() => setStep(4)}
           />
         )}
