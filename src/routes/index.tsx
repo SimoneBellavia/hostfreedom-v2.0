@@ -244,14 +244,18 @@ function Configurator() {
                 structureName: leadStruct,
                 city: leadCity,
               },
+              previewScreenshot: previewScreenshot ?? undefined,
             }}
           />
         )}
       </main>
       <Footer />
+      <CookieBanner />
+      <LegalModal open={openLegal} onClose={() => setOpenLegal(null)} />
     </div>
   );
 }
+
 
 /* ============================================================================
    HEADER / FOOTER
