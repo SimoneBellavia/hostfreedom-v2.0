@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { sendAdminReport } from "@/lib/api/report.functions";
+import { CookieBanner, LegalModal, LegalLink, type LegalDoc } from "@/components/legal";
 import { type LucideIcon,
   ArrowRight, Sparkles, Lock, ShieldCheck, Calculator, Palette,
   LayoutGrid, Monitor, Smartphone, Check, Star, MapPin, Wifi,
@@ -116,6 +117,11 @@ function Configurator() {
   const [otpError, setOtpError] = useState<string | null>(null);
   const correctOtp = useRef("482913");
 
+  // Legal consent + preview screenshot
+  const [legalAccepted, setLegalAccepted] = useState(false);
+  const [openLegal, setOpenLegal] = useState<LegalDoc>(null);
+  const [previewScreenshot, setPreviewScreenshot] = useState<string | null>(null);
+
   const palettes = colorCount === 2 ? PALETTES_2 : colorCount === 3 ? PALETTES_3 : PALETTES_4;
 
   // When color count changes, reset to recommended palette of that group
@@ -138,6 +144,9 @@ function Configurator() {
             setRevenue={setRevenue}
             properties={properties}
             setProperties={setProperties}
+            legalAccepted={legalAccepted}
+            setLegalAccepted={setLegalAccepted}
+            onOpenLegal={setOpenLegal}
             onNext={() => setStep(2)}
           />
         )}
@@ -163,6 +172,7 @@ function Configurator() {
             setLayout={onLayoutChange}
             previewDevice={previewDevice}
             setPreviewDevice={setPreviewDevice}
+            setPreviewScreenshot={setPreviewScreenshot}
             onNext={() => setStep(4)}
           />
         )}
@@ -234,14 +244,18 @@ function Configurator() {
                 structureName: leadStruct,
                 city: leadCity,
               },
+              previewScreenshot: previewScreenshot ?? undefined,
             }}
           />
         )}
       </main>
       <Footer />
+      <CookieBanner />
+      <LegalModal open={openLegal} onClose={() => setOpenLegal(null)} />
     </div>
   );
 }
+
 
 /* ============================================================================
    HEADER / FOOTER
@@ -330,29 +344,35 @@ function Header({ step }: { step: number }) {
 function Footer() {
   return (
     <footer className="border-t border-slate-200/70 bg-[#FBFAF7] py-8">
-      <div className="mx-auto flex max-w-[1400px] flex-col items-center justify-between gap-3 px-4 text-xs text-slate-500 md:flex-row md:px-8">
+      <div className="mx-auto flex max-w-[1400px] flex-col items-center justify-center gap-3 px-4 text-xs text-slate-500 md:px-8">
         <div className="flex items-center gap-2">
           <ShieldCheck className="h-3.5 w-3.5" />
-          Dati elaborati localmente · GDPR compliant
+          Dati elaborati in sicurezza · GDPR compliant
         </div>
-        <div>© HostFreedom · Strumento 100% gratuito</div>
+        <div className="text-center leading-relaxed text-slate-600">
+          HostFreedom — di Simone Pio Bellavia · Via Crucillà 225, Serradifalco (CL) · Email: <a href="mailto:bellaviasimone22@gmail.com" className="underline-offset-2 hover:underline">bellaviasimone22@gmail.com</a> · PEC: bellaviasimone@pec.it · P.IVA: [INSERIRE PARTITA IVA]
+        </div>
+        <div className="text-[10px] uppercase tracking-[0.16em] text-slate-400">© HostFreedom · Strumento 100% gratuito</div>
       </div>
     </footer>
   );
 }
+
 
 /* ============================================================================
    STEP 1
 ============================================================================ */
 
 function Step1({
-  revenue, setRevenue, properties, setProperties, onNext,
+  revenue, setRevenue, properties, setProperties, legalAccepted, setLegalAccepted, onOpenLegal, onNext,
 }: {
   revenue: string; setRevenue: (v: string) => void;
   properties: string; setProperties: (v: string) => void;
+  legalAccepted: boolean; setLegalAccepted: (v: boolean) => void;
+  onOpenLegal: (d: LegalDoc) => void;
   onNext: () => void;
 }) {
-  const valid = Number(revenue) > 0 && Number(properties) > 0;
+  const valid = Number(revenue) > 0 && Number(properties) > 0 && legalAccepted;
   return (
     <section className="mx-auto max-w-2xl pt-10 md:pt-16">
       <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/70 px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-slate-600">
@@ -393,6 +413,22 @@ function Step1({
           />
         </Field>
 
+        <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 bg-slate-50/60 p-3.5 transition hover:bg-slate-50">
+          <input
+            type="checkbox"
+            checked={legalAccepted}
+            onChange={(e) => setLegalAccepted(e.target.checked)}
+            className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-slate-300 accent-slate-900"
+          />
+          <span className="text-[12.5px] leading-relaxed text-slate-700">
+            Accetto i{" "}
+            <LegalLink doc="terms" onOpen={onOpenLegal}>Termini di Servizio</LegalLink>{" "}
+            e la{" "}
+            <LegalLink doc="privacy" onOpen={onOpenLegal}>Privacy Policy</LegalLink>.
+            Capisco che i dati inseriti verranno utilizzati per calcolare la mia perdita e per essere ricontattato per finalità commerciali.
+          </span>
+        </label>
+
         <button
           disabled={!valid}
           onClick={onNext}
@@ -402,6 +438,9 @@ function Step1({
           Calcola il mio risparmio
           <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
         </button>
+        {!legalAccepted && (Number(revenue) > 0 || Number(properties) > 0) && (
+          <p className="text-center text-[11px] text-amber-700">Devi accettare i Termini e la Privacy Policy per procedere.</p>
+        )}
         <p className="flex items-center justify-center gap-1.5 text-center text-xs text-slate-500">
           <Lock className="h-3 w-3" /> Calcolo locale. Nessun dato trasmesso. GDPR.
         </p>
@@ -814,13 +853,39 @@ function Step3(props: {
   archetype: string; setArchetype: (a: string) => void;
   layout: LayoutId; setLayout: (l: LayoutId) => void;
   previewDevice: "mobile" | "desktop"; setPreviewDevice: (d: "mobile" | "desktop") => void;
+  setPreviewScreenshot: (s: string | null) => void;
   onNext: () => void;
 }) {
   const {
     colorCount, setColorCount, palettes, selectedPalette, setSelectedPalette,
     archetype, setArchetype, layout, setLayout,
-    previewDevice, setPreviewDevice, onNext,
+    previewDevice, setPreviewDevice, setPreviewScreenshot, onNext,
   } = props;
+
+  const previewRef = useRef<HTMLDivElement>(null);
+  const [capturing, setCapturing] = useState(false);
+
+  const captureAndProceed = async () => {
+    setCapturing(true);
+    try {
+      if (previewRef.current && typeof window !== "undefined") {
+        const html2canvas = (await import("html2canvas")).default;
+        const canvas = await html2canvas(previewRef.current, {
+          backgroundColor: "#ffffff",
+          scale: 1,
+          useCORS: true,
+          logging: false,
+        });
+        setPreviewScreenshot(canvas.toDataURL("image/png"));
+      }
+    } catch (err) {
+      console.error("Preview screenshot failed:", err);
+    } finally {
+      setCapturing(false);
+      onNext();
+    }
+  };
+
 
   type SubStep = 1 | 2 | 3 | 4;
   const [subStep, setSubStep] = useState<SubStep>(1);
@@ -1084,7 +1149,7 @@ function Step3(props: {
                   </div>
                 </div>
 
-                <div className="flex justify-center">
+                <div ref={previewRef} className="flex justify-center">
                   <DevicePreview device={previewDevice}>
                     <SitePreview palette={selectedPalette} layout={layout} archetype={archetype} device={previewDevice} />
                   </DevicePreview>
@@ -1097,11 +1162,13 @@ function Step3(props: {
 
               <div className="flex flex-col gap-3">
                 <button
-                  onClick={onNext}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition hover:bg-slate-800"
+                  onClick={captureAndProceed}
+                  disabled={capturing}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
                 >
-                  Salva questa bozza e procedi <ArrowRight className="h-4 w-4" />
+                  {capturing ? "Salvataggio in corso…" : "Salva questa bozza e procedi"} <ArrowRight className="h-4 w-4" />
                 </button>
+
                 <button
                   onClick={goToLayout}
                   className="flex items-center justify-center gap-2 text-[12px] font-medium text-slate-500 underline-offset-2 hover:text-slate-800 hover:underline"
