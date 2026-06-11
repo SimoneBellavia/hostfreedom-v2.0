@@ -849,13 +849,39 @@ function Step3(props: {
   archetype: string; setArchetype: (a: string) => void;
   layout: LayoutId; setLayout: (l: LayoutId) => void;
   previewDevice: "mobile" | "desktop"; setPreviewDevice: (d: "mobile" | "desktop") => void;
+  setPreviewScreenshot: (s: string | null) => void;
   onNext: () => void;
 }) {
   const {
     colorCount, setColorCount, palettes, selectedPalette, setSelectedPalette,
     archetype, setArchetype, layout, setLayout,
-    previewDevice, setPreviewDevice, onNext,
+    previewDevice, setPreviewDevice, setPreviewScreenshot, onNext,
   } = props;
+
+  const previewRef = useRef<HTMLDivElement>(null);
+  const [capturing, setCapturing] = useState(false);
+
+  const captureAndProceed = async () => {
+    setCapturing(true);
+    try {
+      if (previewRef.current && typeof window !== "undefined") {
+        const html2canvas = (await import("html2canvas")).default;
+        const canvas = await html2canvas(previewRef.current, {
+          backgroundColor: "#ffffff",
+          scale: 1,
+          useCORS: true,
+          logging: false,
+        });
+        setPreviewScreenshot(canvas.toDataURL("image/png"));
+      }
+    } catch (err) {
+      console.error("Preview screenshot failed:", err);
+    } finally {
+      setCapturing(false);
+      onNext();
+    }
+  };
+
 
   type SubStep = 1 | 2 | 3 | 4;
   const [subStep, setSubStep] = useState<SubStep>(1);
