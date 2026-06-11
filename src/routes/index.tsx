@@ -344,16 +344,20 @@ function Header({ step }: { step: number }) {
 function Footer() {
   return (
     <footer className="border-t border-slate-200/70 bg-[#FBFAF7] py-8">
-      <div className="mx-auto flex max-w-[1400px] flex-col items-center justify-between gap-3 px-4 text-xs text-slate-500 md:flex-row md:px-8">
+      <div className="mx-auto flex max-w-[1400px] flex-col items-center justify-center gap-3 px-4 text-xs text-slate-500 md:px-8">
         <div className="flex items-center gap-2">
           <ShieldCheck className="h-3.5 w-3.5" />
-          Dati elaborati localmente · GDPR compliant
+          Dati elaborati in sicurezza · GDPR compliant
         </div>
-        <div>© HostFreedom · Strumento 100% gratuito</div>
+        <div className="text-center leading-relaxed text-slate-600">
+          HostFreedom — di Simone Pio Bellavia · Via Crucillà 225, Serradifalco (CL) · Email: <a href="mailto:bellaviasimone22@gmail.com" className="underline-offset-2 hover:underline">bellaviasimone22@gmail.com</a> · PEC: bellaviasimone@pec.it · P.IVA: [INSERIRE PARTITA IVA]
+        </div>
+        <div className="text-[10px] uppercase tracking-[0.16em] text-slate-400">© HostFreedom · Strumento 100% gratuito</div>
       </div>
     </footer>
   );
 }
+
 
 /* ============================================================================
    STEP 1
