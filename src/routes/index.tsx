@@ -360,13 +360,15 @@ function Footer() {
 ============================================================================ */
 
 function Step1({
-  revenue, setRevenue, properties, setProperties, onNext,
+  revenue, setRevenue, properties, setProperties, legalAccepted, setLegalAccepted, onOpenLegal, onNext,
 }: {
   revenue: string; setRevenue: (v: string) => void;
   properties: string; setProperties: (v: string) => void;
+  legalAccepted: boolean; setLegalAccepted: (v: boolean) => void;
+  onOpenLegal: (d: LegalDoc) => void;
   onNext: () => void;
 }) {
-  const valid = Number(revenue) > 0 && Number(properties) > 0;
+  const valid = Number(revenue) > 0 && Number(properties) > 0 && legalAccepted;
   return (
     <section className="mx-auto max-w-2xl pt-10 md:pt-16">
       <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/70 px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-slate-600">
@@ -407,6 +409,22 @@ function Step1({
           />
         </Field>
 
+        <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 bg-slate-50/60 p-3.5 transition hover:bg-slate-50">
+          <input
+            type="checkbox"
+            checked={legalAccepted}
+            onChange={(e) => setLegalAccepted(e.target.checked)}
+            className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-slate-300 accent-slate-900"
+          />
+          <span className="text-[12.5px] leading-relaxed text-slate-700">
+            Accetto i{" "}
+            <LegalLink doc="terms" onOpen={onOpenLegal}>Termini di Servizio</LegalLink>{" "}
+            e la{" "}
+            <LegalLink doc="privacy" onOpen={onOpenLegal}>Privacy Policy</LegalLink>.
+            Capisco che i dati inseriti verranno utilizzati per calcolare la mia perdita e per essere ricontattato per finalità commerciali.
+          </span>
+        </label>
+
         <button
           disabled={!valid}
           onClick={onNext}
@@ -416,6 +434,9 @@ function Step1({
           Calcola il mio risparmio
           <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
         </button>
+        {!legalAccepted && (Number(revenue) > 0 || Number(properties) > 0) && (
+          <p className="text-center text-[11px] text-amber-700">Devi accettare i Termini e la Privacy Policy per procedere.</p>
+        )}
         <p className="flex items-center justify-center gap-1.5 text-center text-xs text-slate-500">
           <Lock className="h-3 w-3" /> Calcolo locale. Nessun dato trasmesso. GDPR.
         </p>
