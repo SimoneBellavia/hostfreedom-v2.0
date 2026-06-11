@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { sendAdminReport } from "@/lib/api/report.functions";
+import { CookieBanner, LegalModal, LegalLink, type LegalDoc } from "@/components/legal";
 import { type LucideIcon,
   ArrowRight, Sparkles, Lock, ShieldCheck, Calculator, Palette,
   LayoutGrid, Monitor, Smartphone, Check, Star, MapPin, Wifi,
