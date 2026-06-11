@@ -1145,7 +1145,7 @@ function Step3(props: {
                   </div>
                 </div>
 
-                <div className="flex justify-center">
+                <div ref={previewRef} className="flex justify-center">
                   <DevicePreview device={previewDevice}>
                     <SitePreview palette={selectedPalette} layout={layout} archetype={archetype} device={previewDevice} />
                   </DevicePreview>
@@ -1158,11 +1158,13 @@ function Step3(props: {
 
               <div className="flex flex-col gap-3">
                 <button
-                  onClick={onNext}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition hover:bg-slate-800"
+                  onClick={captureAndProceed}
+                  disabled={capturing}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
                 >
-                  Salva questa bozza e procedi <ArrowRight className="h-4 w-4" />
+                  {capturing ? "Salvataggio in corso…" : "Salva questa bozza e procedi"} <ArrowRight className="h-4 w-4" />
                 </button>
+
                 <button
                   onClick={goToLayout}
                   className="flex items-center justify-center gap-2 text-[12px] font-medium text-slate-500 underline-offset-2 hover:text-slate-800 hover:underline"
