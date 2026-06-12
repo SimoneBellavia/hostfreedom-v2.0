@@ -269,19 +269,44 @@ const STEP_META = [
   { label: "Verifica", subtitle: "Convalida Sicura", peace: "Standard Bancario OTP" },
 ] as const;
 
+function HFMonogram({ className = "h-9 w-9" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 64 64" className={className} aria-label="HostFreedom" role="img">
+      {/* H letter in brand-blue */}
+      <path d="M10 8 H20 V28 H34 V8 H44 V56 H34 V36 H20 V56 H10 Z" fill="#0B1A30" />
+      {/* Falcon wing in brand-gold */}
+      <path d="M40 12 L60 8 L52 18 L60 16 L50 26 L58 24 L46 34 Z" fill="#C5A85C" />
+      <path d="M44 36 L60 32 L52 40 L60 38 L48 48 Z" fill="#C5A85C" opacity="0.85" />
+    </svg>
+  );
+}
+
+function HostFreedomLogoFull({ size = "lg" }: { size?: "md" | "lg" }) {
+  const mono = size === "lg" ? "h-20 w-20" : "h-14 w-14";
+  const title = size === "lg" ? "text-4xl md:text-5xl" : "text-2xl";
+  const tag = size === "lg" ? "text-[10px] md:text-xs" : "text-[9px]";
+  return (
+    <div className="flex flex-col items-center text-center">
+      <HFMonogram className={mono} />
+      <div className={`mt-3 font-serif-display ${title} tracking-tight`}>
+        <span className="font-bold not-italic text-brand-blue">Host</span>
+        <span className="font-light italic text-brand-gold">Freedom</span>
+      </div>
+      <div className={`mt-1.5 ${tag} uppercase tracking-[0.22em] text-brand-gray`}>
+        Strategic Ownership <span className="text-brand-gold">•</span> Elite Independence
+      </div>
+    </div>
+  );
+}
+
 function Header({ step }: { step: number }) {
   const current = STEP_META[step - 1];
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-[#FBFAF7]/85 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-4 py-4 md:px-8">
-        <div className="flex items-center gap-2.5">
-          <div className="grid h-9 w-9 place-items-center rounded-lg bg-slate-900 text-white">
-            <KeyRound className="h-4 w-4" />
-          </div>
-          <div className="leading-tight">
-            <div className="font-serif-display text-lg font-semibold tracking-tight">HostFreedom</div>
-            <div className="text-[10px] uppercase tracking-[0.18em] text-slate-500">Configurator · Gratuito</div>
-          </div>
+      <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-4 py-3 md:px-8 md:py-4">
+        <div className="flex items-center gap-2">
+          <HFMonogram className="h-8 w-8 md:h-9 md:w-9" />
+          <span className="sr-only">HostFreedom</span>
         </div>
         <div className="hidden items-center gap-1 md:flex">
           {STEP_META.map((s, i) => {
@@ -293,7 +318,7 @@ function Header({ step }: { step: number }) {
                 <div
                   className={`group relative flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition ${
                     active
-                      ? "bg-slate-900 text-white shadow-sm shadow-slate-900/10"
+                      ? "bg-brand-blue text-white shadow-sm"
                       : done
                         ? "bg-emerald-50 text-emerald-700"
                         : "text-slate-400"
@@ -303,14 +328,6 @@ function Header({ step }: { step: number }) {
                     {done ? <Check className="h-3 w-3" /> : n}
                   </span>
                   {s.label}
-                  <div className="pointer-events-none absolute left-1/2 top-full z-50 mt-2 hidden -translate-x-1/2 group-hover:block">
-                    <div className="w-56 rounded-xl border border-slate-200 bg-white px-3 py-2 text-left shadow-xl">
-                      <div className="text-[11px] font-semibold text-slate-900">{s.subtitle}</div>
-                      <div className="mt-0.5 flex items-center gap-1 text-[10px] text-slate-500">
-                        <ShieldCheck className="h-3 w-3 text-emerald-600" /> {s.peace}
-                      </div>
-                    </div>
-                  </div>
                 </div>
                 {i < STEP_META.length - 1 && (
                   <div className={`h-px w-4 transition ${done ? "bg-emerald-300" : "bg-slate-200"}`} />
@@ -319,21 +336,18 @@ function Header({ step }: { step: number }) {
             );
           })}
         </div>
-        <div className="hidden min-w-0 flex-col items-end text-right md:flex">
-          <div className="font-serif-display text-sm font-semibold italic text-slate-900">{current.subtitle}</div>
-          <div className="flex items-center gap-1 text-[10px] uppercase tracking-[0.14em] text-emerald-700">
-            <ShieldCheck className="h-3 w-3" /> {current.peace}
+        <div className="flex flex-col items-end text-right md:hidden">
+          <div className="text-[11px] font-semibold text-brand-blue">
+            Passo {step}/5
+          </div>
+          <div className="mt-1 h-1 w-20 overflow-hidden rounded-full bg-slate-200">
+            <div className="h-full rounded-full bg-brand-gold transition-all duration-500" style={{ width: `${(step / 5) * 100}%` }} />
           </div>
         </div>
-        <div className="flex flex-col items-end text-right md:hidden">
-          <div className="text-[11px] font-semibold text-slate-900">
-            Passo {step}/5 · <span className="font-serif-display italic">{current.subtitle}</span>
-          </div>
-          <div className="mt-0.5 flex items-center gap-1 text-[9px] uppercase tracking-[0.14em] text-emerald-700">
-            <ShieldCheck className="h-2.5 w-2.5" /> {current.peace}
-          </div>
-          <div className="mt-1.5 h-1 w-24 overflow-hidden rounded-full bg-slate-200">
-            <div className="h-full rounded-full bg-slate-900 transition-all duration-500" style={{ width: `${(step / 5) * 100}%` }} />
+        <div className="hidden min-w-0 flex-col items-end text-right md:flex">
+          <div className="font-serif-display text-sm font-semibold italic text-brand-blue">{current.subtitle}</div>
+          <div className="flex items-center gap-1 text-[10px] uppercase tracking-[0.14em] text-emerald-700">
+            <ShieldCheck className="h-3 w-3" /> {current.peace}
           </div>
         </div>
       </div>
