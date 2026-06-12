@@ -9,6 +9,8 @@ import { type LucideIcon,
   ChevronLeft, ChevronRight, Mail, Phone, Home, Building2,
   KeyRound, CheckCircle2, AlertCircle, Settings2, Eye,
 } from "lucide-react";
+import hostfreedomMonogram from "@/assets/hostfreedom-monogram.png.asset.json";
+import hostfreedomLogoFull from "@/assets/hostfreedom-logo.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -269,33 +271,27 @@ const STEP_META = [
   { label: "Verifica", subtitle: "Convalida Sicura", peace: "Standard Bancario OTP" },
 ] as const;
 
+
 function HFMonogram({ className = "h-9 w-9" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 64 64" className={className} aria-label="HostFreedom" role="img">
-      {/* H letter in brand-blue */}
-      <path d="M10 8 H20 V28 H34 V8 H44 V56 H34 V36 H20 V56 H10 Z" fill="#0B1A30" />
-      {/* Falcon wing in brand-gold */}
-      <path d="M40 12 L60 8 L52 18 L60 16 L50 26 L58 24 L46 34 Z" fill="#C5A85C" />
-      <path d="M44 36 L60 32 L52 40 L60 38 L48 48 Z" fill="#C5A85C" opacity="0.85" />
-    </svg>
+    <img
+      src={hostfreedomMonogram.url}
+      alt="HostFreedom"
+      className={`${className} object-contain`}
+      draggable={false}
+    />
   );
 }
 
 function HostFreedomLogoFull({ size = "lg" }: { size?: "md" | "lg" }) {
-  const mono = size === "lg" ? "h-20 w-20" : "h-14 w-14";
-  const title = size === "lg" ? "text-4xl md:text-5xl" : "text-2xl";
-  const tag = size === "lg" ? "text-[10px] md:text-xs" : "text-[9px]";
+  const cls = size === "lg" ? "h-40 md:h-48" : "h-24";
   return (
-    <div className="flex flex-col items-center text-center">
-      <HFMonogram className={mono} />
-      <div className={`mt-3 font-serif-display ${title} tracking-tight`}>
-        <span className="font-bold not-italic text-brand-blue">Host</span>
-        <span className="font-light italic text-brand-gold">Freedom</span>
-      </div>
-      <div className={`mt-1.5 ${tag} uppercase tracking-[0.22em] text-brand-gray`}>
-        Strategic Ownership <span className="text-brand-gold">•</span> Elite Independence
-      </div>
-    </div>
+    <img
+      src={hostfreedomLogoFull.url}
+      alt="HostFreedom — Strategic Ownership · Elite Independence"
+      className={`${cls} mx-auto w-auto object-contain`}
+      draggable={false}
+    />
   );
 }
 
