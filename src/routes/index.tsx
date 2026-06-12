@@ -386,78 +386,156 @@ function Step1({
   onOpenLegal: (d: LegalDoc) => void;
   onNext: () => void;
 }) {
+  const [screen, setScreen] = useState<1 | 2>(1);
   const valid = Number(revenue) > 0 && Number(properties) > 0 && legalAccepted;
+
   return (
-    <section className="mx-auto max-w-2xl pt-10 md:pt-16">
-      <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/70 px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-slate-600">
-        <Sparkles className="h-3 w-3" /> Passo 1 di 5 · 30 secondi
-      </div>
-      <h1 className="font-serif-display text-4xl font-semibold tracking-tight text-slate-900 md:text-6xl">
-        Quanto stai <em className="italic text-emerald-500">davvero</em> lasciando<br /> sul tavolo?
-      </h1>
-      <p className="mt-4 max-w-xl text-base text-slate-600 md:text-lg">
-        Inserisci due dati. In tre secondi calcoliamo, <strong>localmente nel tuo browser</strong>, quante commissioni stai regalando ai portali — e cosa significherebbe averle nel tuo conto.
-      </p>
-
-      <div className="mt-10 space-y-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)] md:p-8">
-        <Field label="Fatturato Lordo Annuo via portali" hint="Quanto incassi in un anno tramite Booking, Airbnb, Vrbo, ecc." tooltip="Questo dato viene elaborato esclusivamente nel tuo browser tramite crittografia locale per stimare i tuoi margini. HostFreedom non memorizza né traccia le tue informazioni finanziarie in questa fase.">
-          <div className="relative">
-            <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-lg font-medium text-slate-400">€</span>
-            <input
-              type="number"
-              inputMode="numeric"
-              min={0}
-              value={revenue}
-              onChange={(e) => setRevenue(e.target.value)}
-              placeholder="es. 80000"
-              className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-4 pl-10 pr-4 text-lg font-medium text-slate-900 outline-none transition focus:border-slate-900 focus:bg-white focus:ring-4 focus:ring-slate-900/5"
-            />
-          </div>
-        </Field>
-
-        <Field label="Numero di strutture gestite in Italia" hint="Appartamenti, B&B, ville, case vacanza — il totale.">
-          <input
-            type="number"
-            inputMode="numeric"
-            min={1}
-            value={properties}
-            onChange={(e) => setProperties(e.target.value)}
-            placeholder="es. 3"
-            className="w-full rounded-xl border border-slate-200 bg-slate-50/60 px-4 py-4 text-lg font-medium text-slate-900 outline-none transition focus:border-slate-900 focus:bg-white focus:ring-4 focus:ring-slate-900/5"
-          />
-        </Field>
-
-        <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 bg-slate-50/60 p-3.5 transition hover:bg-slate-50">
-          <input
-            type="checkbox"
-            checked={legalAccepted}
-            onChange={(e) => setLegalAccepted(e.target.checked)}
-            className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-slate-300 accent-slate-900"
-          />
-          <span className="text-[12.5px] leading-relaxed text-slate-700">
-            Accetto i{" "}
-            <LegalLink doc="terms" onOpen={onOpenLegal}>Termini di Servizio</LegalLink>{" "}
-            e la{" "}
-            <LegalLink doc="privacy" onOpen={onOpenLegal}>Privacy Policy</LegalLink>.
-            Capisco che i dati inseriti verranno utilizzati per calcolare la mia perdita e per essere ricontattato per finalità commerciali.
-          </span>
-        </label>
-
-        <button
-          disabled={!valid}
-          onClick={onNext}
-          className="group mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-6 py-4 text-base font-semibold text-white shadow-lg shadow-slate-900/10 transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
+    <section className="-mx-4 -mb-32 -mt-6 overflow-hidden md:m-0">
+      <div className="relative md:hidden">
+        <div
+          className="flex w-[200%] transition-transform duration-500 ease-out"
+          style={{ transform: screen === 1 ? "translateX(0%)" : "translateX(-50%)" }}
         >
-          <Calculator className="h-4 w-4" />
-          Calcola il mio risparmio
-          <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-        </button>
-        {!legalAccepted && (Number(revenue) > 0 || Number(properties) > 0) && (
-          <p className="text-center text-[11px] text-amber-700">Devi accettare i Termini e la Privacy Policy per procedere.</p>
-        )}
-        <p className="flex items-center justify-center gap-1.5 text-center text-xs text-slate-500">
-          <Lock className="h-3 w-3" /> Calcolo locale. Nessun dato trasmesso. GDPR.
+          {/* Screen 1: hook */}
+          <div className="flex h-[calc(100dvh-64px)] w-1/2 flex-col justify-between px-5 pb-6 pt-8">
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-brand-gold/40 bg-white/70 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-brand-blue">
+                <Sparkles className="h-3 w-3 text-brand-gold" /> 30 secondi · Gratis
+              </div>
+              <h1 className="font-serif-display text-[34px] font-semibold leading-[1.05] tracking-tight text-brand-blue">
+                Quanto stai <em className="italic text-brand-gold">davvero</em> lasciando sul tavolo?
+              </h1>
+              <p className="text-[15px] leading-relaxed text-brand-gray">
+                Inserisci due dati. In tre secondi calcoliamo, <strong className="text-brand-blue">localmente nel tuo browser</strong>, quante commissioni stai regalando ai portali.
+              </p>
+            </div>
+            <button
+              onClick={() => setScreen(2)}
+              className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-brand-blue px-6 py-5 text-base font-semibold text-white shadow-xl shadow-brand-blue/20 transition active:scale-[0.98]"
+            >
+              Scoprilo Ora (Gratis)
+              <ArrowRight className="h-5 w-5 transition group-hover:translate-x-0.5" />
+            </button>
+          </div>
+
+          {/* Screen 2: calculator */}
+          <div className="flex h-[calc(100dvh-64px)] w-1/2 flex-col justify-between px-5 pb-6 pt-5">
+            <div className="space-y-3">
+              <button onClick={() => setScreen(1)} className="inline-flex items-center gap-1 text-xs text-brand-gray active:text-brand-blue">
+                <ChevronLeft className="h-3.5 w-3.5" /> Indietro
+              </button>
+              <h2 className="font-serif-display text-[26px] font-semibold leading-tight text-brand-blue">
+                I tuoi numeri
+              </h2>
+              <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                <div>
+                  <label className="text-[12px] font-semibold text-brand-blue">Fatturato Lordo Annuo via portali</label>
+                  <div className="relative mt-1.5">
+                    <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-base font-medium text-brand-gray">€</span>
+                    <input
+                      type="number"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      min={0}
+                      value={revenue}
+                      onChange={(e) => setRevenue(e.target.value)}
+                      placeholder="es. 80000"
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-3 pl-9 pr-3 text-base font-medium text-brand-blue outline-none transition focus:border-brand-gold focus:bg-white focus:ring-4 focus:ring-brand-gold/15"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[12px] font-semibold text-brand-blue">Numero di strutture in Italia</label>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    min={1}
+                    value={properties}
+                    onChange={(e) => setProperties(e.target.value)}
+                    placeholder="es. 3"
+                    className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50/60 px-3 py-3 text-base font-medium text-brand-blue outline-none transition focus:border-brand-gold focus:bg-white focus:ring-4 focus:ring-brand-gold/15"
+                  />
+                </div>
+              </div>
+              <label className="flex cursor-pointer items-start gap-2.5 px-1">
+                <input
+                  type="checkbox"
+                  checked={legalAccepted}
+                  onChange={(e) => setLegalAccepted(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-slate-300 accent-brand-blue"
+                />
+                <span className="text-[11.5px] leading-snug text-brand-gray">
+                  Accetto i{" "}
+                  <LegalLink doc="terms" onOpen={onOpenLegal}>Termini</LegalLink>{" "}
+                  e la{" "}
+                  <LegalLink doc="privacy" onOpen={onOpenLegal}>Privacy Policy</LegalLink>. I dati saranno usati per essere ricontattato.
+                </span>
+              </label>
+            </div>
+            <div className="space-y-2">
+              <button
+                disabled={!valid}
+                onClick={onNext}
+                className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-brand-blue px-6 py-4 text-base font-semibold text-white shadow-xl shadow-brand-blue/20 transition active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
+              >
+                <Calculator className="h-4 w-4" />
+                Calcola il mio risparmio
+                <ArrowRight className="h-4 w-4" />
+              </button>
+              <p className="flex items-center justify-center gap-1.5 text-center text-[11px] text-brand-gray">
+                <Lock className="h-3 w-3" /> Calcolo locale. Nessun dato trasmesso.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop fallback (kept simple, original) */}
+      <div className="mx-auto hidden max-w-2xl px-4 pt-10 md:block md:pt-16">
+        <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/70 px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-brand-blue">
+          <Sparkles className="h-3 w-3 text-brand-gold" /> Passo 1 di 5 · 30 secondi
+        </div>
+        <h1 className="font-serif-display text-4xl font-semibold tracking-tight text-brand-blue md:text-6xl">
+          Quanto stai <em className="italic text-brand-gold">davvero</em> lasciando<br /> sul tavolo?
+        </h1>
+        <p className="mt-4 max-w-xl text-base text-brand-gray md:text-lg">
+          Inserisci due dati. In tre secondi calcoliamo, <strong>localmente nel tuo browser</strong>, quante commissioni stai regalando ai portali.
         </p>
+        <div className="mt-10 space-y-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+          <Field label="Fatturato Lordo Annuo via portali" hint="Quanto incassi in un anno tramite Booking, Airbnb, Vrbo, ecc.">
+            <div className="relative">
+              <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-lg font-medium text-brand-gray">€</span>
+              <input
+                type="number" inputMode="numeric" pattern="[0-9]*" min={0}
+                value={revenue} onChange={(e) => setRevenue(e.target.value)} placeholder="es. 80000"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-4 pl-10 pr-4 text-lg font-medium text-brand-blue outline-none transition focus:border-brand-gold focus:bg-white focus:ring-4 focus:ring-brand-gold/15"
+              />
+            </div>
+          </Field>
+          <Field label="Numero di strutture gestite in Italia" hint="Appartamenti, B&B, ville, case vacanza — il totale.">
+            <input
+              type="number" inputMode="numeric" pattern="[0-9]*" min={1}
+              value={properties} onChange={(e) => setProperties(e.target.value)} placeholder="es. 3"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50/60 px-4 py-4 text-lg font-medium text-brand-blue outline-none transition focus:border-brand-gold focus:bg-white focus:ring-4 focus:ring-brand-gold/15"
+            />
+          </Field>
+          <label className="flex cursor-pointer items-start gap-3 p-1">
+            <input type="checkbox" checked={legalAccepted} onChange={(e) => setLegalAccepted(e.target.checked)}
+              className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-slate-300 accent-brand-blue" />
+            <span className="text-[12.5px] leading-relaxed text-brand-gray">
+              Accetto i <LegalLink doc="terms" onOpen={onOpenLegal}>Termini di Servizio</LegalLink> e la{" "}
+              <LegalLink doc="privacy" onOpen={onOpenLegal}>Privacy Policy</LegalLink>.
+            </span>
+          </label>
+          <button disabled={!valid} onClick={onNext}
+            className="group mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-brand-blue px-6 py-4 text-base font-semibold text-white shadow-lg transition hover:bg-brand-blue/90 disabled:cursor-not-allowed disabled:bg-slate-300">
+            <Calculator className="h-4 w-4" /> Calcola il mio risparmio <ArrowRight className="h-4 w-4" />
+          </button>
+          <p className="flex items-center justify-center gap-1.5 text-center text-xs text-brand-gray">
+            <Lock className="h-3 w-3" /> Calcolo locale. Nessun dato trasmesso. GDPR.
+          </p>
+        </div>
       </div>
     </section>
   );
