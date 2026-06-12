@@ -1844,10 +1844,11 @@ function Step5({
     return (
       <section className="mx-auto max-w-2xl pt-10 md:pt-16">
         <div className="rounded-3xl border border-emerald-200/70 bg-gradient-to-br from-emerald-50/90 to-white p-8 text-center md:p-12">
-          <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald-500 text-white shadow-lg shadow-emerald-500/30">
-            <CheckCircle2 className="h-8 w-8" />
+          <HostFreedomLogoFull size="lg" />
+          <div className="mx-auto mt-6 inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+            <CheckCircle2 className="h-3.5 w-3.5" /> Verifica completata
           </div>
-          <h2 className="mt-5 font-serif-display text-4xl font-semibold leading-tight text-slate-900 md:text-5xl">
+          <h2 className="mt-4 font-serif-display text-3xl font-semibold leading-tight text-brand-blue md:text-4xl">
             Grazie. Hai fatto la scelta giusta.
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-base leading-relaxed text-slate-600">
