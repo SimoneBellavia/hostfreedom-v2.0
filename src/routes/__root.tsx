@@ -77,12 +77,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "HostFreedom Configurator — Calcola il tuo risparmio" },
-      { name: "description", content: "Strumento gratuito per host italiani: calcola quanto risparmi rispetto a Booking e Airbnb e progetta il tuo sito di prenotazione diretta." },
-      { property: "og:title", content: "HostFreedom Configurator" },
-      { property: "og:description", content: "Calcola il risparmio sulle commissioni OTA e progetta il tuo sito diretto." },
+      { name: "theme-color", content: "#0B1A30" },
+      { title: "HostFreedom — Calcola il Risparmio sulle Commissioni OTA | Sito Prenotazione Diretta" },
+      { name: "description", content: "Scopri quanto risparmi eliminando le commissioni di Booking e Airbnb. Calcola gratis il tuo risparmio annuale e progetta il sito di prenotazione diretta per la tua struttura ricettiva italiana." },
+      { name: "keywords", content: "risparmio commissioni OTA, prenotazione diretta, Booking Airbnb commissioni, sito web B&B, casa vacanza, host Italia" },
+      { name: "author", content: "HostFreedom - Simone Pio Bellavia" },
+      { name: "robots", content: "index, follow" },
+      { property: "og:title", content: "HostFreedom — Calcola il Risparmio e Crea il Tuo Sito Diretto" },
+      { property: "og:description", content: "Strumento gratuito per host italiani: calcola quanto risparmi rispetto a Booking e Airbnb e progetta il tuo sito di prenotazione diretta." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:locale", content: "it_IT" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "HostFreedom — Libertà dal pagamento commissioni OTA" },
+      { name: "twitter:description", content: "Calcola quanto risparmi e crea il tuo sito di prenotazione diretta. Gratis, in 30 secondi." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -90,7 +97,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap",
       },
     ],
   }),
@@ -102,11 +109,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="it">
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="antialiased">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded focus:bg-brand-blue focus:px-4 focus:py-2 focus:text-white">
+          Vai al contenuto principale
+        </a>
         {children}
         <Scripts />
       </body>

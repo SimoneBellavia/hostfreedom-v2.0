@@ -15,8 +15,8 @@ import hostfreedomLogoFull from "@/assets/hostfreedom-logo.png.asset.json";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "HostFreedom Configurator — Calcola il tuo risparmio" },
-      { name: "description", content: "Strumento gratuito per host italiani per progettare il sito di prenotazione diretta e calcolare il risparmio sulle commissioni." },
+      { title: "HostFreedom — Calcola il Risparmio Commissioni OTA | Crea il Tuo Sito Diretto" },
+      { name: "description", content: "Scopri quanto stai perdendo in commissioni Booking e Airbnb. Calcola gratis il risparmio e progetta il sito di prenotazione diretta per il tuo B&B o casa vacanza in Italia." },
     ],
   }),
   component: Configurator,
@@ -139,7 +139,7 @@ function Configurator() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#FBFAF7] text-slate-900">
       <Header step={step} />
-      <main className="mx-auto w-full max-w-[1400px] overflow-x-hidden px-4 pb-32 pt-6 md:px-8">
+      <main id="main-content" className="mx-auto w-full max-w-[1400px] overflow-x-hidden px-4 pb-32 pt-6 md:px-8" role="main">
         {step === 1 && (
           <Step1
             revenue={revenue}
@@ -298,12 +298,11 @@ function HostFreedomLogoFull({ size = "lg" }: { size?: "md" | "lg" }) {
 function Header({ step }: { step: number }) {
   const current = STEP_META[step - 1];
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-[#FBFAF7]/85 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-[#FBFAF7]/85 backdrop-blur-xl" role="banner">
       <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-4 py-3 md:px-8 md:py-4">
-        <div className="flex items-center gap-2">
+        <a href="/" className="flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 rounded-lg" aria-label="HostFreedom — Torna alla home">
           <HFMonogram className="h-8 w-8 md:h-9 md:w-9" />
-          <span className="sr-only">HostFreedom</span>
-        </div>
+        </a>
         <div className="hidden items-center gap-1 md:flex">
           {STEP_META.map((s, i) => {
             const n = i + 1;
@@ -353,16 +352,16 @@ function Header({ step }: { step: number }) {
 
 function Footer() {
   return (
-    <footer className="border-t border-slate-200/70 bg-[#FBFAF7] py-8">
+    <footer className="border-t border-slate-200/70 bg-[#FBFAF7] py-8" role="contentinfo">
       <div className="mx-auto flex max-w-[1400px] flex-col items-center justify-center gap-3 px-4 text-xs text-slate-500 md:px-8">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="h-3.5 w-3.5" />
-          Dati elaborati in sicurezza · GDPR compliant
+          <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+          <span>Dati elaborati in sicurezza · GDPR compliant</span>
         </div>
-        <div className="text-center leading-relaxed text-slate-600">
-          HostFreedom — di Simone Pio Bellavia · Via Crucillà 225, Serradifalco (CL) · Email: <a href="mailto:bellaviasimone22@gmail.com" className="underline-offset-2 hover:underline">bellaviasimone22@gmail.com</a> · PEC: bellaviasimone@pec.it · P.IVA: [INSERIRE PARTITA IVA]
-        </div>
-        <div className="text-[10px] uppercase tracking-[0.16em] text-slate-400">© HostFreedom · Strumento 100% gratuito</div>
+        <address className="text-center leading-relaxed text-slate-600 not-italic">
+          HostFreedom — di Simone Pio Bellavia · Via Crucillà 225, Serradifalco (CL) · Email: <a href="mailto:bellaviasimone22@gmail.com" className="underline-offset-2 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold">bellaviasimone22@gmail.com</a> · PEC: <a href="mailto:bellaviasimone@pec.it" className="underline-offset-2 hover:underline">bellaviasimone@pec.it</a>
+        </address>
+        <p className="text-[10px] uppercase tracking-[0.16em] text-slate-400">© {new Date().getFullYear()} HostFreedom · Strumento 100% gratuito</p>
       </div>
     </footer>
   );
@@ -1557,7 +1556,7 @@ function GalleryBlock({ palette, isMobile }: { palette: Palette; isMobile: boole
         <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2">
           {imgs.map((src, i) => (
             <div key={i} className="relative h-44 w-[78%] shrink-0 snap-start overflow-hidden rounded-xl">
-              <img src={src} alt="" className="h-full w-full object-cover" />
+              <img src={src} alt="Foto camera d'albergo" loading="lazy" className="h-full w-full object-cover" />
               <div className="absolute bottom-2 right-2 rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-semibold text-white">
                 {i + 1} / {imgs.length}
               </div>
@@ -1572,11 +1571,11 @@ function GalleryBlock({ palette, isMobile }: { palette: Palette; isMobile: boole
     <section className="px-5">
       <h3 className="mb-3 font-serif-display text-2xl font-semibold" style={{ color: palette.text }}>Galleria</h3>
       <div className="grid grid-cols-4 grid-rows-2 gap-2" style={{ height: 320 }}>
-        <img src={imgs[0]} alt="" className="col-span-2 row-span-2 h-full w-full rounded-xl object-cover" />
-        <img src={imgs[1]} alt="" className="h-full w-full rounded-xl object-cover" />
-        <img src={imgs[2]} alt="" className="h-full w-full rounded-xl object-cover" />
-        <img src={imgs[3]} alt="" className="h-full w-full rounded-xl object-cover" />
-        <img src={imgs[4]} alt="" className="h-full w-full rounded-xl object-cover" />
+        <img src={imgs[0]} alt="Foto camera d'albergo" loading="lazy" className="col-span-2 row-span-2 h-full w-full rounded-xl object-cover" />
+        <img src={imgs[1]} alt="Foto camera d'albergo" loading="lazy" className="h-full w-full rounded-xl object-cover" />
+        <img src={imgs[2]} alt="Foto camera d'albergo" loading="lazy" className="h-full w-full rounded-xl object-cover" />
+        <img src={imgs[3]} alt="Foto camera d'albergo" loading="lazy" className="h-full w-full rounded-xl object-cover" />
+        <img src={imgs[4]} alt="Foto camera d'albergo" loading="lazy" className="h-full w-full rounded-xl object-cover" />
       </div>
     </section>
   );
