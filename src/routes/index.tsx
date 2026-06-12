@@ -269,8 +269,6 @@ const STEP_META = [
   { label: "Verifica", subtitle: "Convalida Sicura", peace: "Standard Bancario OTP" },
 ] as const;
 
-import hostfreedomMonogram from "@/assets/hostfreedom-monogram.png.asset.json";
-import hostfreedomLogoFull from "@/assets/hostfreedom-logo.png.asset.json";
 
 function HFMonogram({ className = "h-9 w-9" }: { className?: string }) {
   return (
