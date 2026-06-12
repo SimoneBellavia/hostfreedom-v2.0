@@ -9,6 +9,8 @@ import { type LucideIcon,
   ChevronLeft, ChevronRight, Mail, Phone, Home, Building2,
   KeyRound, CheckCircle2, AlertCircle, Settings2, Eye,
 } from "lucide-react";
+import hostfreedomMonogram from "@/assets/hostfreedom-monogram.png.asset.json";
+import hostfreedomLogoFull from "@/assets/hostfreedom-logo.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
